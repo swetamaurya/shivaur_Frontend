@@ -1210,8 +1210,10 @@
                   class="btn add-btn"
                   data-bs-toggle="modal"
                   data-bs-target="#add_expense"
+
                   ><i class="fa-solid fa-plus"></i> Add Expense</a
                 >
+                <button class="btn rounded add-btn me-2" id="delete_btn_multiple_file" data-bs-toggle="modal" data-bs-target="#delete_data"><i class="fa-solid fa-plus"></i> Delete Expense</button>
               </div>
             </div>
           </div>
@@ -1276,6 +1278,8 @@
                 <table class="table table-striped custom-table mb-0 datatable">
                   <thead>
                     <tr>
+                      <th class="width-thirty">
+                        <input type="checkbox" class="checkbox_all" name="" id=""></th>
                       <th>S.no</th>
                       <th>Item</th>
                       <th>Expense Name</th>
@@ -1422,10 +1426,9 @@
                     </div>
                     <div class="col-md-6">
                       <div class="input-block mb-3">
-                        <label class="col-form-label">Purchased By </label>
-                        <select class="select" id="add-purchased-by">
-                          <option>Daniel Porter</option>
-                          <option>Roger Dixon</option>
+                        <label class="col-form-label">Purchased By</label>
+                        <select class="form-control" id="purchaseBy_select_option">
+                          <option value="" selected disabled>Select Purchase By</option>
                         </select>
                       </div>
                     </div>
@@ -1445,9 +1448,10 @@
                     <div class="col-md-6">
                       <div class="input-block mb-3">
                         <label class="col-form-label">Paid By</label>
-                        <select class="select" id="add-paid-by">
-                          <option>Cash</option>
-                          <option>Cheque</option>
+                        <select id="add-paid-by" class="form-control">
+                          <option selected disabled>Select Paid By</option>
+                          <option value="Cash">Cash</option>
+                          <option value="Cheque">Cheque</option>
                         </select>
                       </div>
                     </div>
@@ -1456,9 +1460,10 @@
                     <div class="col-md-6">
                       <div class="input-block mb-3">
                         <label class="col-form-label">Status</label>
-                        <select class="select" id="add-status">
-                          <option>Pending</option>
-                          <option>Approved</option>
+                        <select id="add-status" class="form-control">
+                          <option selected disabled>Select Status</option>
+                          <option value="Approved">Approved</option>
+                          <option value="Pending">Pending</option>
                         </select>
                       </div>
                     </div>
@@ -1469,7 +1474,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="attach-files">
+                  <!-- <div class="attach-files">
                     <ul>
                       <li>
                         <img
@@ -1486,7 +1491,7 @@
                         <a href="#" class="fa fa-close file-remove"></a>
                       </li>
                     </ul>
-                  </div>
+                  </div> -->
                   <div class="input-block mb-3">
                     <label class="col-form-label">Description</label>
                     <textarea rows="4" id="description" class="form-control" placeholder="Enter your message here"></textarea>
@@ -1494,7 +1499,7 @@
                     <div id="editor"></div>
                   </div>
                   <div class="submit-section">
-                    <button type="submit" class="btn btn-primary submit-btn">
+                    <button type="submit" class="btn btn-primary submit-btn" data-bs-dismiss="modal">
                       Submit
                     </button>
                   </div>
@@ -1503,7 +1508,7 @@
             </div>
           </div>
         </div>
-
+ 
         <div id="edit_expense" class="modal custom-modal fade" role="dialog">
           <div
             class="modal-dialog modal-dialog-centered modal-lg"
@@ -1562,10 +1567,9 @@
                     </div>
                     <div class="col-md-6">
                       <div class="input-block mb-3">
-                        <label class="col-form-label">Purchased By </label>
-                        <select id="edit-purchase-by" class="select">
-                          <option>Daniel Porter</option>
-                          <option>Roger Dixon</option>
+                        <label class="col-form-label">Purchased By</label>
+                        <select class="form-control" id="edit-purchaseBy_select_option">
+                          <option value="" selected disabled>Select Purchase By</option>
                         </select>
                       </div>
                     </div>
@@ -1586,7 +1590,7 @@
                     <div class="col-md-6">
                       <div class="input-block mb-3">
                         <label class="col-form-label">Paid By</label>
-                        <select id="edit-paid-by" class="select">
+                        <select class="form-control" id="edit-paid-by">
                           <option>Cash</option>
                           <option>Cheque</option>
                         </select>
@@ -1597,9 +1601,9 @@
                     <div class="col-md-6">
                       <div class="input-block mb-3">
                         <label class="col-form-label">Status</label>
-                        <select id="edit-status" class="select">
-                          <option>Pending</option>
+                        <select class="form-control" id="edit-status">
                           <option>Approved</option>
+                          <option>Pending</option>
                         </select>
                       </div>
                     </div>
@@ -1614,7 +1618,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="attach-files">
+                  <!-- <div class="attach-files">
                     <ul>
                       <li>
                         <img
@@ -1631,7 +1635,7 @@
                         <a href="#" class="fa fa-close file-remove"></a>
                       </li>
                     </ul>
-                  </div>
+                  </div> -->
                   <div class="input-block mb-3">
                     <label class="col-form-label">Description</label>
                     <textarea rows="4" id="edit-description" class="form-control" placeholder="Enter your message here"></textarea>
@@ -1639,7 +1643,7 @@
                     <div id="editor"></div>
                   </div>
                   <div class="submit-section">
-                    <button type="submit" class="btn btn-primary submit-btn">
+                    <button type="submit" class="btn btn-primary submit-btn" data-bs-dismiss="modal">
                       Save
                     </button>
                   </div>
@@ -1649,7 +1653,7 @@
           </div>
         </div>
 
-        <div class="modal custom-modal fade" id="delete_expense" role="dialog">
+        <div class="modal custom-modal fade" id="delete_data" role="dialog">
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-body">
@@ -1661,7 +1665,7 @@
                   <div class="row">
                     <div class="col-6">
                       <a
-                        onclick="handleClickToDeleteExpense()"
+                      id="deleteButton"
                         href="javascript:void(0);"
                         data-bs-dismiss="modal"
                         class="btn btn-primary continue-btn"
@@ -2366,7 +2370,7 @@
       data-cf-settings="a584005f29a7ae81ebc6d9e7-|49"
       defer
     ></script>
-    <script src="./assets/custom/expenses.js"></script>
+    <script type="module" src="./assets/custom/expenses.js"></script>
   </body>
   <script>
     $(document).ready(function () {

@@ -17,6 +17,13 @@ const token = localStorage.getItem('token');
 // =================================================================================
 // Fetch and display all leave data in the dashboard
 async function all_data_load_dashboard() {
+
+    try {
+        loading_shimmer();
+    } catch (error) {
+        console.log(error);
+    }
+
     let tableData = document.getElementById('tableData');
     tableData.innerHTML = '';
     let rows;
@@ -73,6 +80,12 @@ async function all_data_load_dashboard() {
             <tr>
                 <td colspan="6" class='text-center'><i class="fa-solid fa-times"></i> Error loading data</td>
             </tr>`;
+    }
+
+    try {
+        remove_loading_shimmer();
+    } catch (error) {
+        console.log(error);
     }
 }
 
@@ -131,6 +144,13 @@ document.getElementById('add_leave_setting').addEventListener('submit', async fu
 // =========================================================================================
 // Load leave details for editing
 window.handleEditLeave = async function(leaveId) {
+
+    try {
+        loading_shimmer();
+    } catch (error) {
+        console.log(error);
+    }
+
     try {
         const response = await fetch(`${leaveType_API}/get/${leaveId}`, {
             method: 'GET',
@@ -141,11 +161,19 @@ window.handleEditLeave = async function(leaveId) {
         });
 
         const leave = await response.json();
+        console.log(" :- ",leave)
+        document.getElementById("_id_hidden_edit").value = leave._id || '';
         document.getElementById('edi-type-of-leave').value = leave.leaveName || '';
         document.getElementById('editleaveDays').value = leave.day || '';
         document.getElementById('edit-days-of-leave').value = leave.durationLeave || '';
     } catch (error) {
         console.error('Error loading leave details:', error);
+    }
+
+    try {
+        remove_loading_shimmer();
+    } catch (error) {
+        console.log(error);
     }
 };
 
@@ -170,29 +198,29 @@ document.getElementById('edit_leave_setting').addEventListener('submit', async f
         console.log(error);
     }
 
-    const leaveId = document.getElementById('edit_leave_id').value;
+    const _id = document.getElementById("_id_hidden_edit").value;
     const leaveName = document.getElementById('edi-type-of-leave').value.trim();
     const day = document.getElementById('editleaveDays').value.trim();
     const durationLeave = document.getElementById('edit-days-of-leave').value;
 
     try {
-        const response = await fetch(`${leaveType_API}/update/${leaveId}`, {
-            method: 'PUT',
+        const response = await fetch(`${leaveType_API}/update`, {
+            method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ leaveName, day, durationLeave }),
+            body: JSON.stringify({ _id, leaveName, day, durationLeave }),
         });
 
         const success = response.ok;
-        status_popup(success ? "Data Updated Successfully" : "Please try again later", success);
+        status_popup(success ? "Data Updated <br> Successfully" : "Please try <br> again later", success);
         if (success) {
             all_data_load_dashboard();
         }
     } catch (error) {
         console.error('Error updating leave type:', error);
-        status_popup("Please try again later", false);
+        status_popup("Please try <br> again later", false);
     }
 
     try {

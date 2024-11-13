@@ -722,21 +722,17 @@
               <div class="row">
                 <div class="col-sm-6 col-md-3">
                   <div class="input-block mb-3">
-                    <label class="col-form-label">Client <span class="text-danger">*</span></label>
-                    <select id="client" class="select">
-                      <option>Please Select</option>
-                      <option value="Barry Cuda">Barry Cuda</option>
-                      <option value="Tressa Wexler">Tressa Wexler</option>
+                    <label class="col-form-label">Client Name</label>
+                    <select name="" id="client_select_option" class="form-control">
+                      <option value="" selected disabled>Select Client's Name</option>
                     </select>
                   </div>
                 </div>
                 <div class="col-sm-6 col-md-3">
                   <div class="input-block mb-3">
-                    <label class="col-form-label">Project <span class="text-danger">*</span></label>
-                    <select id="project" class="select">
-                      <option>Select Project</option>
-                      <option value="Office Management">Office Management</option>
-                      <option value="Project Management">Project Management</option>
+                    <label class="col-form-label"> Assign Project </label>
+                    <select name="" id="project_select_option" class="form-control">
+                      <option value="" selected disabled>Select Assign Project</option>
                     </select>
                   </div>
                 </div>
@@ -748,12 +744,12 @@
                 </div>
                 <div class="col-sm-6 col-md-3">
                   <div class="input-block mb-3">
-                    <label class="col-form-label">Tax</label>
-                    <select id="taxType" class="select">
-                      <option>Select Tax</option>
-                      <option value="VAT">VAT</option>
+                    <label class="col-form-label">Tax Type</label>
+                    <select class="form-control" id="taxType">
+                      <option value="" disabled="" selected="">Select Tax</option>
                       <option value="GST">GST</option>
-                      <option value="No Tax">No Tax</option>
+                      <option value="VAT">VAT</option>
+                    </select>
                     </select>
                   </div>
                 </div>
@@ -817,7 +813,7 @@
                             <input class="form-control quantity" type="text">
                           </td>
                           <td>
-                            <input class="form-control invoiceAmount" type="text">
+                            <input disabled class="form-control invoiceAmount" type="text">
                           </td>
                           <td><a href="javascript:void(0)" class="text-success font-18 addProduct" onclick="addInvoiceTableRow('addTable')" title="Add"><i
                                 class="fa-solid fa-plus"></i></a></td>
@@ -832,7 +828,7 @@
                           <td class="text-danger">Please click on the Button to update the Amount</td>
                           <td colspan="4" class="text-end"></td>
                           <td class="text-end pe-4"> 
-                          <input onclick="handleAmountOnClick()"  type="button" value="button" />
+                          <input  type="button" value="button" />
                           </td>
                         </tr>
                         <tr>
@@ -846,7 +842,7 @@
                         <tr>
                           <td colspan="5" class="text-end">Tax</td>
                           <td class="text-end pr-4">
-                            <input id="tax" class="form-control text-end" type="text">
+                            <input id="tax" class="form-control text-end"s type="text">
                           </td>
                         </tr>
                         <tr>
@@ -854,7 +850,7 @@
                             Discount %
                           </td>
                           <td class="text-end pe-4">
-                            <input class="form-control text-end" type="text">
+                            <input id="discount" class="form-control text-end" type="text">
                           </td>
                         </tr>
                         <tr>
@@ -1273,7 +1269,7 @@
   <script src="assets/js/app.js" type="a584005f29a7ae81ebc6d9e7-text/javascript"></script>
   <script src="https://cdnjs.cloudflare.com/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js"
     data-cf-settings="a584005f29a7ae81ebc6d9e7-|49" defer></script>
-    <script src="./assets/custom/createInvoice.js"></script>
+    <script type="module" src="./assets/custom/createInvoice.js"></script>
 
 </body>
 <script>

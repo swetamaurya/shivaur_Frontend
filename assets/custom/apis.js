@@ -1,5 +1,5 @@
 // --------------------------------------------------------------
-const domain = 'https://shivaur-crm.onrender.com';
+const domain = 'http://localhost:3000';
 // --------------------------------------------------------------
 export const delete_API = `${domain}/delete/all`;
 export const user_API = `${domain}/user`;
@@ -17,4 +17,7 @@ export const holiday_API = `${domain}/holiday`;
 export const termination_API = `${domain}/termination`;
 export const resignation_API = `${domain}/resignation`;
 export const policy_API = `${domain}/policy`;
+export const expense_API = `${domain}/sales/expenses`;
+export const estimate_API = `${domain}/estimates`;
+export const invoice_API = `${domain}/invoice`
 // --------------------------------------------------------------

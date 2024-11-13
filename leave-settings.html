@@ -333,7 +333,7 @@
                         
                         <label class="col-form-label">Type Of Leave<span class="text-danger">*</span></label>
                       </div>
-                      <input class="form-control" type="text" id="type-of-leave" />
+                      <input class="form-control" type="text" id="type-of-leave" required />
                     </div>
                   </div>
                   <div class="col-sm-12">
@@ -341,7 +341,7 @@
                       <div class="d-flex align-items-center justify-content-between">
                         <label class="col-form-label"  >Leave Days <span class="text-danger">*</span></label>
                       </div>
-                      <input
+                      <input required
                         class="form-control"
                         type="number"
                         id="leaveDays"
@@ -353,7 +353,7 @@
                       <div class="d-flex align-items-center justify-content-between">
                         <label class="col-form-label"  >Days Of Leaves <span class="text-danger">*</span></label>
                       </div>
-                      <select class="form-control" id="days-of-leave">
+                      <select class="form-control" id="days-of-leave" required>
                         <option disabled="" selected="">Select Leaves</option>
                         <option value="Weekly">Weekly</option>
                         <option value="Monthly">Monthly</option>
@@ -402,7 +402,8 @@
                         
                         <label class="col-form-label">Type Of Leave<span class="text-danger">*</span></label>
                       </div>
-                      <input class="form-control" type="text" id="edi-type-of-leave" />
+                      <input type="text" name="" hidden id="_id_hidden_edit">
+                      <input class="form-control" type="text" id="edi-type-of-leave" required />
                     </div>
                   </div>
                   <div class="col-sm-12">
@@ -411,6 +412,7 @@
                         <label class="col-form-label"  >Leave Days <span class="text-danger">*</span></label>
                       </div>
                       <input
+                      required
                         class="form-control"
                         type="number"
                         id="editleaveDays"
@@ -422,7 +424,7 @@
                       <div class="d-flex align-items-center justify-content-between">
                         <label class="col-form-label"  >Days Of Leaves <span class="text-danger">*</span></label>
                       </div>
-                      <select class="form-control" id="edit-days-of-leave">
+                      <select class="form-control" id="edit-days-of-leave" required>
                         <option disabled="" selected="">Select Leaves</option>
                         <option value="Weekly">Weekly</option>
                         <option value="Monthly">Monthly</option>

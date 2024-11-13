@@ -715,6 +715,7 @@
               </ul>
             </div>
             <div class="col-auto float-end ms-auto">
+              <button class="btn rounded add-btn me-2" id="delete_btn_multiple_file" data-bs-toggle="modal" data-bs-target="#delete_data"><i class="fa-solid fa-plus"></i> Delete Policy</button>
               <a href="create-estimate.html" class="btn add-btn"><i class="fa-solid fa-plus"></i> Create Estimate</a>
             </div>
           </div>
@@ -760,6 +761,8 @@
               <table class="table table-striped custom-table mb-0">
                 <thead>
                   <tr>
+                    <th class="width-thirty">
+                      <input type="checkbox" class="checkbox_all" name="" id=""></th>
                     <th>S.no</th>
                     <th>Estimate Number</th>
                     <th>Client</th>
@@ -861,7 +864,7 @@
       </div>
 
 
-      <div class="modal custom-modal fade" id="delete_estimate" role="dialog">
+      <div class="modal custom-modal fade" id="delete_data" role="dialog" data-bs-dismiss="modal">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-body">
@@ -872,7 +875,9 @@
               <div class="modal-btn delete-action">
                 <div class="row">
                   <div class="col-6">
-                    <a onclick="handleClickToDeleteEstimateData()" href="javascript:void(0);" class="btn btn-primary continue-btn">Delete</a>
+                    <a href="javascript:void(0);"
+                    id="deleteButton" 
+                    class="btn btn-primary continue-btn">Delete</a>
                   </div>
                   <div class="col-6">
                     <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
@@ -1271,7 +1276,7 @@
   <script src="https://cdnjs.cloudflare.com/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js"
     data-cf-settings="a584005f29a7ae81ebc6d9e7-|49" defer></script>
 
-    <script src="./assets/custom/estimates.js"></script>
+    <script type="module" src="./assets/custom/estimates.js"></script>
 </body>
 <script>
   $(document).ready(function () {

@@ -721,21 +721,19 @@
               <div class="row">
                 <div class="col-sm-6 col-md-3">
                   <div class="input-block mb-3">
-                    <label class="col-form-label">Client <span class="text-danger">*</span></label>
-                    <select id="client" class="select">
-                      <option>Please Select</option>
-                      <option value="Barry Cuda">Barry Cuda</option>
-                      <option value="Tressa Wexler">Tressa Wexler</option>
+                    <label class="col-form-label">Client Name</label>
+                    <!-- <input class="form-control" type="text" id="client" /> -->
+                    <select name="" id="client_select_option" class="form-control">
+                      <option value="" selected disabled>Select Client's Name</option>
                     </select>
                   </div>
                 </div>
                 <div class="col-sm-6 col-md-3">
                   <div class="input-block mb-3">
-                    <label class="col-form-label">Project <span class="text-danger">*</span></label>
-                    <select id="project" class="select">
-                      <option>Select Project</option>
-                      <option value="Office Management">Office Management</option>
-                      <option value="Project Management">Project Management</option>
+                    <label class="col-form-label"> Assign Project </label>
+                    <!-- <input class="form-control" type="text" id="assignedTo" /> -->
+                    <select name="" id="project_select_option" class="form-control">
+                      <option value="" selected disabled>Select Assign Project</option>
                     </select>
                   </div>
                 </div>
@@ -747,12 +745,12 @@
                 </div>
                 <div class="col-sm-6 col-md-3">
                   <div class="input-block mb-3">
-                    <label class="col-form-label">Tax</label>
-                    <select id="taxType" class="select">
-                      <option>Select Tax</option>
-                      <option value="VAT">VAT</option>
+                    <label class="col-form-label">Tax Type</label>
+                    <select class="form-control" id="taxType">
+                      <option value="" disabled="" selected="">Select Tax</option>
                       <option value="GST">GST</option>
-                      <option value="No Tax">No Tax</option>
+                      <option value="VAT">VAT</option>
+                    </select>
                     </select>
                   </div>
                 </div>
@@ -770,18 +768,18 @@
                 </div>
                 <div class="col-sm-6 col-md-3">
                   <div class="input-block mb-3">
-                    <label class="col-form-label">Estimate date <span class="text-danger">*</span></label>
-                    <div class="cal-icon">
-                      <input id="estimateDate" class="form-control datetimepicker" type="text">
-                    </div>
+                    
+                      <label class="col-form-label">Estimate date <span class="text-danger">*</span></label>
+                      <input id="estimateDate" class="form-control" type="date">
+                    
                   </div>
                 </div>
                 <div class="col-sm-6 col-md-3">
                   <div class="input-block mb-3">
-                    <label class="col-form-label">Expiry Date <span class="text-danger">*</span></label>
-                    <div class="cal-icon">
-                      <input id="expiryDate" class="form-control datetimepicker" type="text">
-                    </div>
+                    
+                      <label class="col-form-label">Expiry Date <span class="text-danger">*</span></label>
+                      <input id="expiryDate" class="form-control" type="date">
+                    
                   </div>
                 </div>
               </div>
@@ -810,13 +808,13 @@
                             <input class="form-control description" type="text">
                           </td>
                           <td>
-                            <input class="form-control unitCost" type="text">
+                            <input class="form-control unitCost" value="0" type="text">
                           </td>
                           <td>
-                            <input class="form-control quantity" type="text">
+                            <input value="0" class="form-control quantity" type="text">
                           </td>
                           <td>
-                            <input onchange="handleToGenerateTotalAmount()" class="form-control invoiceAmount" type="text">
+                            <input class="form-control invoiceAmount " disabled  value="0" type="text">
                           </td>
                           <td><a href="javascript:void(0)" onclick="addInvoiceTableRow('addTable')" class="text-success font-18" title="Add" id="addProduct"><i
                                 class="fa-solid fa-plus"></i></a></td>
@@ -847,13 +845,7 @@
                   <div class="table-responsive">
                     <table class="table table-hover table-white">
                       <tbody>
-                        <tr>
-                          <td class="text-danger">Please click on the Button to update the Amount</td>
-                          <td colspan="4" class="text-end"></td>
-                          <td class="text-end pe-4"> 
-                          <input onclick="handleAmountOnClick()"  type="button" value="button" />
-                          </td>
-                        </tr>
+                        
                         <tr>
                           <td></td>
                           <td></td>
@@ -863,22 +855,22 @@
                           <td id="totalAmount" class="text-end pe-4">0</td>
                         </tr>
                         <tr>
-                          <td colspan="5" class="text-end">Tax</td>
-                          <td class="text-end pe-4">
-                            <input onchange="handleTaxAmountOnChange()" id="tax" class="form-control text-end" value="0" type="text">
-                          </td>
-                        </tr>
-                        <tr>
                           <td colspan="5" class="text-end">
                             Discount %
                           </td>
                           <td class="text-end pe-4">
-                            <input onchange="handleDiscountAmountOnChange()" id="discount" class="form-control text-end" value="0" type="text">
+                            <input id="discount" class="form-control text-end" value="0" type="numbers">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="5" class="text-end">Tax %</td>
+                          <td class="text-end pe-4">
+                            <input  id="tax" class="form-control text-end" value="0" type="numbers">
                           </td>
                         </tr>
                         <tr>
                           <td colspan="5" class="text-end pe-4">
-                            <b id="grandTotal">Grand Total</b>
+                            <b id="">Grand Total</b>
                           </td>
                           <td class="text-end tdata-width pe-4">
                             <b id="grandTotal">$ 0.00</b>
@@ -1292,7 +1284,7 @@
   <script src="assets/js/app.js" type="a584005f29a7ae81ebc6d9e7-text/javascript"></script>
   <script src="https://cdnjs.cloudflare.com/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js"
     data-cf-settings="a584005f29a7ae81ebc6d9e7-|49" defer></script>
-    <script src="./assets/custom/createEstimate.js"></script>
+    <script type="module" src="./assets/custom/createEstimate.js"></script>
 
 </body>
 <script>

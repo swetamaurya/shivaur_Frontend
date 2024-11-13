@@ -715,7 +715,8 @@
               </ul>
             </div>
             <div class="col-auto float-end ms-auto">
-              <a href="create-invoice.html" class="btn add-btn"><i class="fa-solid fa-plus"></i> Create Invoice</a>
+              <button class="btn rounded add-btn ms-2" id="delete_btn_multiple_file" data-bs-toggle="modal" data-bs-target="#delete_data"><i class="fa-solid fa-plus"></i> Delete Invoices</button>
+              <a href="create-invoice.html" class="btn rounded add-btn"><i class="fa-solid fa-plus"></i> Create Invoice</a>
             </div>
           </div>
         </div>
@@ -760,6 +761,8 @@
               <table class="table table-striped custom-table mb-0">
                 <thead>
                   <tr>
+                    <th class="width-thirty">
+                      <input type="checkbox" class="checkbox_all" name="" id=""></th>
                     <th>#</th>
                     <th>Invoice Number</th>
                     <th>Client</th>
@@ -852,7 +855,7 @@
 
   </div>
 
-  <div class="modal custom-modal fade" id="delete_invoice" role="dialog">
+  <div class="modal custom-modal fade" id="delete_data" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-body">
@@ -864,7 +867,6 @@
             <div class="row">
               <div class="col-6">
                 <a
-                onclick="handleClickToDeleteInvoiceData()"
                   href="javascript:void(0);"
                   class="btn btn-primary continue-btn"
                   id="deleteButton"
@@ -1269,7 +1271,7 @@
   <script src="assets/js/app.js" type="a584005f29a7ae81ebc6d9e7-text/javascript"></script>
   <script src="https://cdnjs.cloudflare.com/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js"
     data-cf-settings="a584005f29a7ae81ebc6d9e7-|49" defer></script>
-    <script src="./assets/custom/invoices.js"></script>
+    <script type="module" src="./assets/custom/invoices.js"></script>
 
 </body>
   <script>

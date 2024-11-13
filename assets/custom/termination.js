@@ -1,21 +1,23 @@
-// Redirect if token is missing
 if (!localStorage.getItem("token")) {
     window.location.href = 'index.html';
 }
-
+// =================================================================================
 import { checkbox_function } from './multi_checkbox.js';
 import { status_popup, loading_shimmer, remove_loading_shimmer } from './globalFunctions1.js';
+import { formatDate, capitalizeFirstLetter } from './globalFunctions2.js'
 import { user_API, termination_API, departments_API } from './apis.js';
-import { capitalizeFirstLetter } from './globalFunctions2.js';
-
-/////////////////////////////////////////////////////////////////////
+// -------------------------------------------------------------------------
 import {individual_delete, objects_data_handler_function} from './globalFunctionsDelete.js';
 window.individual_delete = individual_delete;
+// -------------------------------------------------------------------------
+import {} from "./globalFunctionsExport.js";
+// =================================================================================
 const token = localStorage.getItem('token');
+// =================================================================================
+
 
 // Caching employees and departments to avoid redundant API calls
 let cachedEmployee = [];
-let cachedDepartments = [];
 let res =[]
 
 // Fetch Employee and Department Data
@@ -33,21 +35,6 @@ async function fetchEmployeeAndDepartments() {
             cachedEmployee = res.users.employees || []; // Use fallback to empty array
         } catch (error) {
             console.error('Error fetching Employee:', error);
-        }
-    }
-
-    if (cachedDepartments.length === 0) {
-        try {
-            const departmentResponse = await fetch(`${departments_API}/get`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
-            cachedDepartments = await departmentResponse.json();
-        } catch (error) {
-            console.error('Error fetching departments:', error);
         }
     }
 }
@@ -73,28 +60,6 @@ function populateEmployeeDropdown() {
         editEmpSelectOption.appendChild(option.cloneNode(true)); // Clone for edit dropdown
     });
 }
-
-function populateDepartmentDropdown() {
-    const addDeptSelectOption = document.getElementById("departments");
-    const editDeptSelectOption = document.getElementById("edit_departments");
-
-    if (!addDeptSelectOption || !editDeptSelectOption) {
-        console.error("Department dropdown elements not found.");
-        return;
-    }
-
-    addDeptSelectOption.innerHTML = `<option value="" disabled selected>Select Department</option>`;
-    editDeptSelectOption.innerHTML = `<option value="" disabled selected>Select Department</option>`;
-
-    cachedDepartments.forEach(department => {
-        const option = document.createElement("option");
-        option.value = department._id;
-        option.textContent = department.departments;
-        addDeptSelectOption.appendChild(option);
-        editDeptSelectOption.appendChild(option.cloneNode(true)); // Clone for edit dropdown
-    });
-}
-
 // Load Termination Data
 async function all_data_load_dashboard() {
     try {
@@ -102,7 +67,6 @@ async function all_data_load_dashboard() {
         await fetchEmployeeAndDepartments();
 
         populateEmployeeDropdown();
-        populateDepartmentDropdown();
 
         const table = document.getElementById('termination-table-body');
         table.innerHTML = ''; // Clear previous data
@@ -121,17 +85,14 @@ async function all_data_load_dashboard() {
 
         res.forEach(e => {
             const employeeName = e.employee ? e.employee.name : '-';
-            const departmentName = e.department ? e.department.departments : '-';
             const terminationType = e.TerminationType || '-';
             const reason = e.reason || '-';
-            const terminationDate = e.terminationDate ? new Date(e.terminationDate).toLocaleDateString() : '-';
 
             rows.push(`<tr data-id="${e._id}">
                 <td><input type="checkbox" class="checkbox_child" value="${e._id || '-'}"></td>
                 <td>${employeeName}</td>
-                <td>${departmentName}</td>
                 <td>${capitalizeFirstLetter(terminationType)}</td>
-                <td>${terminationDate}</td>
+                <td>${formatDate(e.terminationDate)}</td>
                 <td>${reason}</td>
                 <td>
                     <div class="dropdown dropdown-action">
@@ -211,7 +172,6 @@ window.handleClickOnEdittermination = async function (_id) {
 
     await fetchEmployeeAndDepartments();
     populateEmployeeDropdown();
-    populateDepartmentDropdown();
 
     document.getElementById("edit_employee").value = termination.employee?._id || '';
     document.getElementById("edit_departments").value = termination.department?._id || '';

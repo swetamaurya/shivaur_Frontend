@@ -12,6 +12,8 @@ function formatTime(milliseconds) {
 function calculateTotalTime(start, end) {
     return end && start ? new Date(end) - new Date(start) : 0;
 }
+
+// Function to reset work and break times in local storage
 function resetLocalStorageValues() {
     localStorage.setItem("accumulatedWorkTime", "0");
     localStorage.setItem("totalBreakTime", "0");
@@ -19,6 +21,17 @@ function resetLocalStorageValues() {
     accumulatedBreakTime = 0;
     displayTotalWorkTime();
     displayTotalBreakTime();
+}
+
+// Check if today's date is different from the last recorded date
+function checkAndResetDate() {
+    const today = new Date().toISOString().split('T')[0];
+    const lastRecordedDate = localStorage.getItem("lastRecordedDate");
+
+    if (lastRecordedDate !== today) {
+        localStorage.setItem("lastRecordedDate", today);
+        resetLocalStorageValues();
+    }
 }
 
 // Initialize Variables
@@ -206,7 +219,6 @@ function updateWorkSessionTime() {
     document.getElementById('workSessionTime').textContent = formatTime(elapsedTime);
 }
 
-
 function startBreakSessionTimer() {
     breakSessionStartTime = new Date();
     clearInterval(breakTimerInterval);
@@ -222,10 +234,10 @@ function updateBreakSessionTime() {
     document.getElementById('breakSessionTime').textContent = formatTime(elapsedTime);
 }
 
- 
+// Fetch attendance records with date reset check
+async function fetchAttendanceRecords() {
+    checkAndResetDate(); // Check if today’s date has changed and reset if necessary
 
-
- async function fetchAttendanceRecords() {
     try {
         const response = await fetch(`${attendance_API}/get`, {
             method: 'GET',
@@ -249,7 +261,6 @@ function updateBreakSessionTime() {
         console.error('Error fetching attendance:', error.message);
     }
 }
-
 
 // Populate Table with attendance data
 function populateTable(data) {
@@ -291,7 +302,6 @@ function populateTable(data) {
         tableBody.appendChild(row);
     });
 }
-
 
 function displayNoRecordsMessage() {
     const tableBody = document.getElementById('attendance-table');

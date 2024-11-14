@@ -33,7 +33,7 @@ loginForm.addEventListener("submit", async (event) => {
             if (roles === "Admin") {
                 window.location.href = 'admin-dashboard.html';
             } else if (roles === "Employee") {
-                window.location.href = 'employee-dashboard.html';
+                window.location.href = 'employees-list.html';
             } else if (roles === "Supervisor") {
                 window.location.href = 'supervisor-dashboard.html';
             } else if (roles === "Client") {

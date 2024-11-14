@@ -1,10 +1,33 @@
-// Initializing Variables
+// Helper to Format Time in hh:mm:ss
+function formatTime(milliseconds) {
+    if (isNaN(milliseconds) || milliseconds <= 0) return "00:00:00"; // Fallback if invalid
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+// Calculate total time if start and end times are available
+function calculateTotalTime(start, end) {
+    return end && start ? new Date(end) - new Date(start) : 0;
+}
+function resetLocalStorageValues() {
+    localStorage.setItem("accumulatedWorkTime", "0");
+    localStorage.setItem("totalBreakTime", "0");
+    accumulatedWorkTime = 0;
+    accumulatedBreakTime = 0;
+    displayTotalWorkTime();
+    displayTotalBreakTime();
+}
+
+// Initialize Variables
 let workSessionStartTime = null;
 let breakSessionStartTime = null;
 let workTimerInterval = null;
 let breakTimerInterval = null;
-let accumulatedWorkTime = 0;
-let accumulatedBreakTime = 0;
+let accumulatedWorkTime = parseInt(localStorage.getItem("accumulatedWorkTime") || "0");
+let accumulatedBreakTime = parseInt(localStorage.getItem("totalBreakTime") || "0");
 
 // Redirect if no token
 if (!localStorage.getItem("token")) {
@@ -21,7 +44,6 @@ window.onload = function () {
     const punchButton = document.getElementById('punchButton');
     const breakButton = document.getElementById('breakButton');
 
-    // Event Listeners for Punch and Break Buttons
     punchButton.addEventListener('click', () => {
         const action = punchButton.textContent === 'Punch In' ? 'workPunchIn' : 'workPunchOut';
         action === 'workPunchIn' ? punchIn() : punchOut();
@@ -42,13 +64,20 @@ window.onload = function () {
         punchButton.textContent = 'Punch In';
     }
 
-    // Load and Display Total Break Time from localStorage
-    const storedBreakTime = parseInt(localStorage.getItem("totalBreakTime") || "0");
-    accumulatedBreakTime = storedBreakTime;
-    displayTotalBreakTime(storedBreakTime / 60000); // Convert ms to minutes
+    displayTotalWorkTime();
+    displayTotalBreakTime();
 
     fetchAttendanceRecords();
 };
+
+// Display Total Work and Break Times
+function displayTotalWorkTime() {
+    document.getElementById('workHoursDisplay').textContent = formatTime(accumulatedWorkTime);
+}
+
+function displayTotalBreakTime() {
+    document.getElementById('breakHoursDisplay').textContent = formatTime(accumulatedBreakTime);
+}
 
 // Punch In Function
 async function punchIn() {
@@ -87,8 +116,10 @@ async function punchOut() {
         const data = await response.json();
         if (response.ok) {
             accumulatedWorkTime += new Date() - workSessionStartTime;
+            localStorage.setItem("accumulatedWorkTime", accumulatedWorkTime);
             localStorage.setItem("isPunchedIn", "false");
             stopWorkSessionTimer();
+            displayTotalWorkTime();
             document.getElementById('punchButton').textContent = 'Punch In';
             fetchAttendanceRecords();
         } else {
@@ -107,12 +138,15 @@ async function breakIn() {
             headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId, action: 'breakPunchIn' })
         });
-        
+
         const data = await response.json();
         if (response.ok) {
             breakSessionStartTime = new Date();
             localStorage.setItem("isOnBreak", "true");
-            stopWorkSessionTimer(); // Pause work session timer
+            
+            // Stop work timer without resetting accumulatedWorkTime
+            stopWorkSessionTimer();
+            
             startBreakSessionTimer();
             document.getElementById('breakButton').textContent = 'Break Out';
             fetchAttendanceRecords();
@@ -124,7 +158,7 @@ async function breakIn() {
     }
 }
 
-// Break Out Function
+// Break Out Function - resumes the work timer without resetting it
 async function breakOut() {
     try {
         const response = await fetch(`${attendance_API}/punch`, {
@@ -132,15 +166,20 @@ async function breakOut() {
             headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId, action: 'breakPunchOut' })
         });
-        
+
         const data = await response.json();
         if (response.ok) {
             accumulatedBreakTime += new Date() - breakSessionStartTime;
-            localStorage.setItem("isOnBreak", "false");
-            stopBreakSessionTimer(); // Stop break timer
             localStorage.setItem("totalBreakTime", accumulatedBreakTime);
-            displayTotalBreakTime(accumulatedBreakTime / 60000); // Convert ms to minutes
-            startWorkSessionTimer(new Date()); // Resume work session timer
+            localStorage.setItem("isOnBreak", "false");
+            
+            stopBreakSessionTimer();
+            displayTotalBreakTime();
+            
+            // Resume work timer if the user is punched in
+            if (localStorage.getItem("isPunchedIn") === "true") {
+                startWorkSessionTimer(new Date());
+            }
             document.getElementById('breakButton').textContent = 'Break In';
             fetchAttendanceRecords();
         } else {
@@ -151,7 +190,7 @@ async function breakOut() {
     }
 }
 
-// Timer Functions
+// Timer Functions remain the same
 function startWorkSessionTimer(startTime) {
     workSessionStartTime = startTime;
     clearInterval(workTimerInterval);
@@ -166,6 +205,7 @@ function updateWorkSessionTime() {
     const elapsedTime = new Date() - workSessionStartTime + accumulatedWorkTime;
     document.getElementById('workSessionTime').textContent = formatTime(elapsedTime);
 }
+
 
 function startBreakSessionTimer() {
     breakSessionStartTime = new Date();
@@ -182,31 +222,14 @@ function updateBreakSessionTime() {
     document.getElementById('breakSessionTime').textContent = formatTime(elapsedTime);
 }
 
-// Display Total Times
-function displayTotalWorkTime(totalMinutes) {
-    document.getElementById('workHoursDisplay').textContent = formatTime(totalMinutes * 60000); // Convert to milliseconds
-}
-
-function displayTotalBreakTime(totalMinutes) {
-    document.getElementById('breakHoursDisplay').textContent = formatTime(totalMinutes * 60000); // Convert to milliseconds
-}
-
-// Helper to Format Time in hh:mm:ss
-function formatTime(milliseconds) {
-    const totalSeconds = Math.floor(milliseconds / 1000);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-}
+ 
 
 
-// Fetch and display attendance records
-async function fetchAttendanceRecords() {
+ async function fetchAttendanceRecords() {
     try {
         const response = await fetch(`${attendance_API}/get`, {
             method: 'GET',
-            headers: { 'Authorization': `Bearer ${token}` }
+            headers: { 'Authorization': token ? `Bearer ${token}` : '' }
         });
 
         if (!response.ok) {
@@ -214,48 +237,47 @@ async function fetchAttendanceRecords() {
         }
 
         const data = await response.json();
+        console.log("API Response:", data); // Log to verify data structure
+
         if (data.attendanceRecords && data.attendanceRecords.length > 0) {
             populateTable(data.attendanceRecords);
         } else {
             displayNoRecordsMessage();
+            resetLocalStorageValues();
         }
     } catch (error) {
         console.error('Error fetching attendance:', error.message);
     }
 }
 
+
+// Populate Table with attendance data
 function populateTable(data) {
     const tableBody = document.getElementById('attendance-table');
     tableBody.innerHTML = '';
 
     data.reverse().forEach((entry, index) => {
+        console.log("Entry Data:", entry); // Log to check if break times are present
+
         const row = document.createElement('tr');
         const date = new Date(entry.date).toLocaleDateString();
         const punchIn = entry.punchIn ? new Date(entry.punchIn).toLocaleTimeString() : '-';
         const punchOut = entry.punchOut ? new Date(entry.punchOut).toLocaleTimeString() : '-';
 
-        // Parse totalWorkHours and totalBreakHours from string format to minutes
-        const workHoursParts = entry.totalWorkHours.match(/(\d+)\s*hrs\s*(\d+)\s*mins/);
-        const totalWorkMinutes = workHoursParts
-            ? parseInt(workHoursParts[1]) * 60 + parseInt(workHoursParts[2])
-            : 0;
+        // Calculate total work time from punch in and punch out times
+        const totalWorkTime = entry.totalWorkTime !== undefined ? entry.totalWorkTime : calculateTotalTime(entry.punchIn, entry.punchOut);
+        const totalWorkHoursDisplay = formatTime(totalWorkTime);
 
-        const breakHoursParts = entry.totalBreakHours.match(/(\d+)\s*hrs\s*(\d+)\s*mins/);
-        const totalBreakMinutes = breakHoursParts
-            ? parseInt(breakHoursParts[1]) * 60 + parseInt(breakHoursParts[2])
-            : 0;
-
-        // Calculate display values for total work time
-        const workHours = Math.floor(totalWorkMinutes / 60);
-        const workMinutes = totalWorkMinutes % 60;
-        const workSeconds = 0; // Assume seconds are 0 if not provided
-        const totalWorkHoursDisplay = `${String(workHours).padStart(2, '0')} hrs ${String(workMinutes).padStart(2, '0')} mins ${String(workSeconds).padStart(2, '0')} secs`;
-
-        // Calculate display values for total break time
-        const breakHours = Math.floor(totalBreakMinutes / 60);
-        const breakMinutes = totalBreakMinutes % 60;
-        const breakSeconds = 0; // Assume seconds are 0 if not provided
-        const totalBreakHoursDisplay = `${String(breakHours).padStart(2, '0')} hrs ${String(breakMinutes).padStart(2, '0')} mins ${String(breakSeconds).padStart(2, '0')} secs`;
+        // Calculate total break time from all break sessions
+        let totalBreakTime = 0;
+        if (entry.breakSessions && entry.breakSessions.length > 0) {
+            entry.breakSessions.forEach(breakSession => {
+                if (breakSession.punchIn && breakSession.punchOut) {
+                    totalBreakTime += calculateTotalTime(breakSession.punchIn, breakSession.punchOut);
+                }
+            });
+        }
+        const totalBreakHoursDisplay = formatTime(totalBreakTime);
 
         row.innerHTML = `
             <td>${index + 1}</td>
@@ -269,6 +291,7 @@ function populateTable(data) {
         tableBody.appendChild(row);
     });
 }
+
 
 function displayNoRecordsMessage() {
     const tableBody = document.getElementById('attendance-table');

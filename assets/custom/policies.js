@@ -1,6 +1,4 @@
-if (!localStorage.getItem("token")) {
-  window.location.href = 'index.html';
-}
+const token = localStorage.getItem("token");
 import {policy_API} from './apis.js';
 import {  loading_shimmer, remove_loading_shimmer } from './globalFunctions1.js';
 import {checkbox_function} from './multi_checkbox.js'
@@ -12,7 +10,7 @@ window.individual_delete = individual_delete;
     async function all_data_load_dashboard () {
       try{
         loading_shimmer();
-     
+    } catch(error){console.log(error)}
     // ----------------------------------------------------------------------------------------------------
     
         let policyTableData = document.getElementById('policyTableData');
@@ -54,12 +52,14 @@ window.individual_delete = individual_delete;
         }
         policyTableData.innerHTML = x;
         checkbox_function();
-      } catch (error) {
-        console.error("Error loading terminations:", error);
-    } finally {
-        remove_loading_shimmer();
+        
+    // ----------------------------------------------------------------------------------------------------
+    try{
+      remove_loading_shimmer();
+  } catch(error){console.log(error)}
     }
-}
+    
+
     
 
 // On page load, load employee data for the dashboard

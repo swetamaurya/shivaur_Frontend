@@ -7,19 +7,19 @@ import { user_API, project_API, estimate_API } from './apis.js';
 // =================================================================================
 const token = localStorage.getItem('token');
 // =================================================================================
-
+// =================================================================================
 let cachedClients = [];
 try {
     const response = await fetch(`${user_API}/data/get`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
     });
     const res = await response.json();
     cachedClients = res?.users?.clients;
-  
+    
     const client_select_option = document.getElementById("client_select_option");
     res.users.clients.forEach((client) => {
         const option = document.createElement("option");
@@ -33,17 +33,14 @@ catch(error){
     alert('Failed to load client and employee data.');
 }
 // ----------------------------------------------------------------------------------
-
 document.getElementById("client_select_option").addEventListener("change", function(event){
     let data = cachedClients.find(d=> d._id == event.target.value);
-
+    
     document.getElementById("email").value = data?.email;
     document.getElementById("clientAddress").value = data?.address;
     document.getElementById("billingAddress").value = data?.address;
 })
-
-// ----------------------------------------------------------------------------------
-
+// =================================================================================
 
 async function showProjectDropdown(){
     const r1 = await fetch(`${project_API}/get`, {
@@ -56,7 +53,6 @@ async function showProjectDropdown(){
     const r2 = await r1.json();
     
     const project_select_option = document.getElementById("project_select_option");
-    console.log(r2?.projects);
     r2?.projects.map((e) => {
         let a1 = document.createElement("option");
         a1.value = e?._id || '-';
@@ -65,6 +61,100 @@ async function showProjectDropdown(){
     });
 }
 showProjectDropdown();
+// =================================================================================
+// =================================================================================
+// =================================================================================
+// =================================================================================
+let _id_param;
+// =================================================================================
+async function load_edit_data(){
+    try{
+        loading_shimmer();
+    } catch(error){console.log(error)}
+    // -----------------------------------------------------------------------------------
+    try{
+        _id_param = new URLSearchParams(window.location.search).get("id");
+        console.log(_id_param)
+        const URL = `${estimate_API}/get/${_id_param}`;
+        const responseData = await fetch(URL, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if(!responseData.ok){
+            throw new Error();
+        }
+        const res = await responseData.json()
+    
+        document.getElementById("project_select_option").value = res?.project;
+        document.getElementById("client_select_option").value = res?.client;
+        document.getElementById("email").value = res?.email;
+        document.getElementById("estimateDate").value = res?.estimateDate;
+        document.getElementById("expiryDate").value = res?.expiryDate;
+        document.getElementById("taxType").value = res?.taxType;
+        document.getElementById("clientAddress").value = res?.clientAddress;
+        document.getElementById("billingAddress").value = res?.billingAddress;
+        document.getElementById("otherInfo").value = res?.otherInfo;
+    
+        document.getElementById("totalAmount").value = res?.total;
+        document.getElementById("discount").value = res?.discount;
+        document.getElementById("tax").value = res?.tax;
+        document.getElementById("grandTotal").value = res?.GrandTotal;
+    
+        try {
+            const c = res?.details || []; // Assuming `res.details` is the array of items
+        
+            for (let i = 0; i < c.length; i++) {
+                // Add a new row for each detail except the first one
+                if (i !== 0) {
+                    addInvoiceTableRow("addTable");
+                }
+        
+                const rows = document.querySelectorAll(".tbodyone tr"); // Select all rows in tbody
+                const currentRow = rows[i]; // Current row to populate
+        
+                if (currentRow) {
+                    const cells = currentRow.querySelectorAll("td");
+        
+                    // Only assign values if the elements exist
+                    const itemInput = cells[1]?.querySelector(".item");
+                    if (itemInput) itemInput.value = c[i]?.item || '';
+        
+                    const descriptionInput = cells[2]?.querySelector(".description");
+                    if (descriptionInput) descriptionInput.value = c[i]?.description || '';
+        
+                    const unitCostInput = cells[3]?.querySelector(".unitCost");
+                    if (unitCostInput) unitCostInput.value = c[i]?.unitCost || '0';
+        
+                    const quantityInput = cells[4]?.querySelector(".quantity");
+                    if (quantityInput) quantityInput.value = c[i]?.qty || '0';
+        
+                    const invoiceAmountInput = cells[5]?.querySelector(".invoiceAmount");
+                    if (invoiceAmountInput) invoiceAmountInput.value = c[i]?.amount || '0';
+                }
+            }
+        } catch (error) {
+            console.error("Error populating invoice table:", error);
+        }    
+    } catch(error){
+        window.location.href = 'employees-list.html';
+    }
+    
+
+    // ----------------------------------------------------------------------------------------------------
+    try{
+        remove_loading_shimmer();
+    } catch(error){console.log(error)}
+};
+load_edit_data();
+
+// =================================================================================
+// =================================================================================
+// =================================================================================
+// =================================================================================
+// =================================================================================
 
 // Create Estimate API start
 const createEstimateForm = document.getElementById('create-estimate-form');
@@ -79,7 +169,7 @@ createEstimateForm.addEventListener('submit', async (event) => {
     } catch(error){console.log(error)}
     // -----------------------------------------------------------------------------------
     try {
-        event.preventDefault();
+        const _id = _id_param;
         const email = document.getElementById('email').value;
         const clientAddress = document.getElementById('clientAddress').value;
         const billingAddress = document.getElementById('billingAddress').value;
@@ -112,14 +202,14 @@ createEstimateForm.addEventListener('submit', async (event) => {
             });
         }
 
-        const response = await fetch(`${estimate_API}/post`, {
+        const response = await fetch(`${estimate_API}/update`, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
-                email, clientAddress, billingAddress, estimateDate, expiryDate, details, tax, total, GrandTotal, client, project, taxType, discount, otherInfo
+                _id, email, clientAddress, billingAddress, estimateDate, expiryDate, details, tax, total, GrandTotal, client, project, taxType, discount, otherInfo
             })
         })
         
@@ -133,8 +223,7 @@ createEstimateForm.addEventListener('submit', async (event) => {
             status_popup( ("Please try <br> again later"), (false) );
         }
     } catch (error) {
-        status_popup( ("Please try <br> again later"), (false) );
-        console.error('Error updating employee:', error);
+        window.location.href = 'employees-list.html';
     }
     // ----------------------------------------------------------------------------------------------------
     try{

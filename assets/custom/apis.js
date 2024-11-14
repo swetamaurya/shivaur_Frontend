@@ -1,6 +1,6 @@
 // --------------------------------------------------------------
-const domain = 'https://shivaur-crm.onrender.com';
-// const domain = 'http://localhost:3000';
+// const domain = 'https://shivaur-crm.onrender.com';
+const domain = 'http://localhost:3000';
 // --------------------------------------------------------------
 export const delete_API = `${domain}/delete/all`;
 export const user_API = `${domain}/user`;

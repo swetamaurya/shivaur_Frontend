@@ -73,6 +73,8 @@ async function deleteEventFunction(event) {
         } catch (error) {
             console.error("Error deleting data:", error);
             status_popup("Please try <br> again later", false);
+        }finally {
+            remove_loading_shimmer();
         }
     }
 }

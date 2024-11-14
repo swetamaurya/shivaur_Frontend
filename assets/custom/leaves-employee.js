@@ -112,7 +112,7 @@ async function all_data_load_dashboard(){
         if(r.length>0){
             for (let i = 0; i < r.length; i++) {
                 let e = r[i];
-                const designation = getCachedDesignation(e.leaveType);
+                const designation = getCachedDesignation(e.leaveType.leaveName);
                 console.log(designation)
         
                 x += `<tr data-id="${e._id || "-"}">

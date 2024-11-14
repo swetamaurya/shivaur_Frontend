@@ -100,5 +100,5 @@ async function all_data_load_dashboard() {
   } catch(error){console.log(error)}
 }
 
-window.onload = all_data_load_dashboard;
+all_data_load_dashboard();
 objects_data_handler_function(all_data_load_dashboard);

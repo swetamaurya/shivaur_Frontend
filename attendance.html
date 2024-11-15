@@ -102,7 +102,7 @@
 <div class="table-responsive">
 <table class="table table-striped custom-table table-nowrap mb-0">
 <thead>
-<tr>
+<tr id="dateData">
 <th>Employee Name</th>
 <th>1</th>
 <th>2</th>
@@ -539,6 +539,7 @@
   data-cf-settings="a584005f29a7ae81ebc6d9e7-|49"
   defer
 ></script>
+<script type="module" src="./assets/custom/attendanceLogs.js"></script>
 
 <!-- <script src="./assets/custom/employees.js"></script> -->
 </body> 
@@ -563,11 +564,9 @@
 </script>
 
 
-<script>
+<!-- <script>
   const token = localStorage.getItem("token");
-  const url = "http://localhost:3000/attendance"; // Replace with your actual endpoint URL
-
-// Function to fetch attendance data for a particular month and year
+  const url = "http://localhost:3000/attendance"; 
 async function fetchAttendanceData(month, year) {
   if (!token) {
     console.error('User authentication token is missing');
@@ -594,41 +593,37 @@ async function fetchAttendanceData(month, year) {
   }
 }
 
-// Function to populate the attendance table
 function populateAttendanceTable(attendanceRecords) {
   const tableBody = document.getElementById('attendanceTableBody');
-  tableBody.innerHTML = ''; // Clear existing rows
+  tableBody.innerHTML = ''; 
 
   attendanceRecords.forEach(record => {
     const row = document.createElement('tr');
 
-    // Add employee name
     row.innerHTML = `<td>${record.name}</td>`;
 
-    // Loop through each day of the month (assuming 31 days max)
+    
     for (let day = 1; day <= 31; day++) {
       const attendanceForDay = record.attendance.find(att => att.day === day);
       const status = attendanceForDay ? attendanceForDay.status : 'N/A';
 
-      // Add a checkmark or cross for each day's attendance status
+      
       if (status === 'Present') {
-        row.innerHTML += `<td><span style="color: green;">&#10003;</span></td>`; // Checkmark
+        row.innerHTML += `<td><span style="color: green;">&#10003;</span></td>`; 
       } else if (status === 'Absent') {
-        row.innerHTML += `<td><span style="color: red;">&#10007;</span></td>`; // Cross
+        row.innerHTML += `<td><span style="color: red;">&#10007;</span></td>`; 
       } else {
-        row.innerHTML += `<td>N/A</td>`; // If no data for the day
+        row.innerHTML += `<td>N/A</td>`; 
       }
     }
-
-    // Append the row to the table body
     tableBody.appendChild(row);
   });
 }
 
-// Example: Fetch and display attendance data for October 2024
+
 window.onload = () => {
    fetchAttendanceData(month, year);
 };
 
-</script>
+</script> -->
  </html>

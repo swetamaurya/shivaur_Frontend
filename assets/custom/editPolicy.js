@@ -3,7 +3,7 @@ import {status_popup} from './globalFunctions1.js';
 import {departments_API , policy_API} from './apis.js';
 
 try {
-    const response = await fetch(`${departments_API}`, {
+    const response = await fetch(`${departments_API}/get`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

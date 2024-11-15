@@ -9,50 +9,42 @@ import { leave_API, leaveType_API } from './apis.js';
 // -------------------------------------------------------------------------
 import {individual_delete, objects_data_handler_function} from './globalFunctionsDelete.js';
 window.individual_delete = individual_delete;
-
 import {} from "./globalFunctionsExport.js";
 // =================================================================================
 const token = localStorage.getItem('token');
 // =================================================================================
 
 async function leaveSelectOption() {
-    try{
-        const response = await fetch(`${leaveType_API}/get`,{
+    try {
+        const response = await fetch(`${leaveType_API}/get`, {
             method: 'GET',
-            headers:{
+            headers: {
                 'Authorization': `Bearer ${token}`,
-                'Content-Type':'application/json'
+                'Content-Type': 'application/json'
             }
         });
-        let res = await response.json();
-
-        console.log(" :- ",res)
+        const res = await response.json();
+        console.log("Leave Types: ", res);
 
         let t1 = document.getElementById("edit-leaveType");
         let t2 = document.getElementById("leaveType");
 
-        res.map(e2=>{
-            let op = document.createElement("option");
-            op.value = e2?._id;
-            op.text = e2?.leaveName;
+        res.forEach(e2 => {
+            let option1 = document.createElement("option");
+            option1.value = e2._id;
+            option1.text = e2.leaveName;
+            t1.appendChild(option1);
 
-            t1.appendChild(op);
+            let option2 = document.createElement("option");
+            option2.value = e2._id;
+            option2.text = e2.leaveName;
+            t2.appendChild(option2);
         });
-        res.map(e2=>{
-            let op = document.createElement("option");
-            op.value = e2?._id;
-            op.text = e2?.leaveName;
-
-            t2.appendChild(op);  
-        });
-        console.log(t1);
-        console.log(t2)
-
-    } catch(error){console.log(error)}
+    } catch (error) {
+        console.log("Error in leaveSelectOption:", error);
+    }
 }
 leaveSelectOption();
-
-
 
 let cachedDesignations = [];
 
@@ -67,83 +59,93 @@ async function fetchDesignationsAndDepartments() {
                 },
             });
             cachedDesignations = await designationResponse.json();
-            console.log(cachedDesignations,"ld")
+            console.log("Designations:", cachedDesignations);
         } catch (error) {
             console.error('Error fetching designations:', error);
         }
     }
 }
 
-
-// Get cached designation name by ID
 function getCachedDesignation(designationId) {
-    console.log(designationId)
-    const designation = cachedDesignations.find(d => d._id == designationId);
-    return designation ? designation.leaveName : '';
+    const designation = cachedDesignations.find(d => d._id === designationId);
+    return designation ? designation.leaveName : '-';
 }
 
-
-// employee dashboard data - table - load
-async function all_data_load_dashboard(){
+async function all_data_load_dashboard() {
     let table = document.getElementById('leaveData');
     table.innerHTML = '';
-    try{
-        loading_shimmer();
-    } catch(error){console.log(error)}
-    await fetchDesignationsAndDepartments(); // Ensure designations and departments are loaded
 
-    try{
-        const response = await fetch(`${leave_API}/get`,{
+    try {
+        loading_shimmer();
+    } catch (error) {
+        console.log(error);
+    }
+
+    await fetchDesignationsAndDepartments();
+
+    try {
+        const response = await fetch(`${leave_API}/get`, {
             method: 'GET',
-            headers:{
+            headers: {
                 'Authorization': `Bearer ${token}`,
-                'Content-Type':'application/json'
+                'Content-Type': 'application/json'
             }
         });
-        let res = await response.json();
-    
-        document.getElementById("total_medical_leave").innerText =  res?.medicalLeaveCount;
-        document.getElementById("total_other_leave").innerText = res?.otherLeaveCount;
-        document.getElementById("paidLeaveCount").innerText = res?.paidLeaveCount;
-        document.getElementById("casualLeaveCount").innerText = res?.casualLeaveCount;
-    
-        let r = res?.leaves;
-        var x = '';
-        if(r.length>0){
-            for (let i = 0; i < r.length; i++) {
-                let e = r[i];
-                const designation = getCachedDesignation(e.leaveType.leaveName);
-                console.log(designation)
-        
-                x += `<tr data-id="${e._id || "-"}">
-                        <td ><input type="checkbox" class="checkbox_child" value="${e._id || "-"}"></td>
-                        <td>${designation || "-"}</td>
-                        <td>${formatDate(e?.from) || "-"}</td>
-                        <td>${formatDate(e?.to) || "-"}</td> 
-                        <td>${e.noOfDays || "-"}</td>
-                        <td>${e.reason || "-"}</td>
-                        <td>${e.status || "Pending"}</td>
-                        <td>${e?.approvedBy?.name || "-"}</td>
+        const res = await response.json();
+
+        // Display the leave type counts
+        document.getElementById('total_medical_leave').textContent = res.leaveTypeCounts['Medical Leave'] || 0;
+        document.getElementById('total_other_leave').textContent = res.leaveTypeCounts['Other Leave'] || 0;
+        document.getElementById('paidLeaveCount').textContent = res.leaveTypeCounts['Paid Leave'] || 0;
+        document.getElementById('casualLeaveCount').textContent = res.leaveTypeCounts['Casual Leave'] || 0;
+
+        let r = res.leaves;
+        let tableRows = '';
+
+        if (r && r.length > 0) {
+            r.forEach(e => {
+                const designation = getCachedDesignation(e.leaveType);
+                tableRows += `
+                    <tr data-id="${e._id || '-'}">
+                        <td><input type="checkbox" class="checkbox_child" value="${e._id || '-'}"></td>
+                        <td>${e.leaveType && e.leaveType.leaveName ? e.leaveType.leaveName : '-'}</td>
+                        <td>${formatDate(e.from) || '-'}</td>
+                        <td>${formatDate(e.to) || '-'}</td>
+                        <td>${e.noOfDays || '-'}</td>
+                        <td>${e.reason || '-'}</td>
+                        <td>${e.leaveStatus || 'Pending'}</td>
+                        <td>${e.approvedBy?.name || '-'}</td>
                         <td class="text-end">
                             <div class="dropdown dropdown-action"> 
-                                <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                                <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="material-icons">more_vert</i>
+                                </a>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" onclick="handleClickOnEditLeaves('${e._id}')" data-bs-toggle="modal" data-bs-target="#edit_data"><i  class="fa-solid fa-pencil m-r-5"></i> Edit</a>
-                                    <a class="dropdown-item" onclick="individual_delete('${e._id}')" href="#" data-bs-toggle="modal" data-bs-target="#delete_data"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
+                                    <a class="dropdown-item" onclick="handleClickOnEditLeaves('${e._id}')" data-bs-toggle="modal" data-bs-target="#edit_data">
+                                        <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                                    </a>
+                                    <a class="dropdown-item" onclick="individual_delete('${e._id}')" href="#" data-bs-toggle="modal" data-bs-target="#delete_data">
+                                        <i class="fa-regular fa-trash-can m-r-5"></i> Delete
+                                    </a>
                                 </div> 
                             </div> 
                         </td>
                     </tr>`;
-            }
-            table.innerHTML = x;
+            });
+            table.innerHTML = tableRows;
             checkbox_function();
         }
-    } catch(error){console.log(error)}
-    // ----------------------------------------------------------------------------------------------------
-    try{
+    } catch (error) {
+        console.error('Error loading dashboard data:', error);
+    }
+
+    try {
         remove_loading_shimmer();
-    } catch(error){console.log(error)}
+    } catch (error) {
+        console.log(error);
+    }
 }
+
 // =============================================================================================
 // =============================================================================================
 // =============================================================================================
@@ -183,7 +185,7 @@ document.getElementById('add-leave-employee-form').addEventListener('submit', as
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({leaveType, halfDay, from, to, noOfDays, reason})
+            body: JSON.stringify({leaveType, halfDay, from, to, noOfDays, reason})  
         })
 
         try{
@@ -195,6 +197,8 @@ document.getElementById('add-leave-employee-form').addEventListener('submit', as
             document.getElementById('reason').value = '';
         } catch (error){}
 
+        const resp = await response.json();
+        console.log(resp);
         const success = response.ok;
         status_popup(success ? "Data Updated <br> Successfully" : "Please try again later", success);
         if (success){

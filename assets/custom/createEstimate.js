@@ -30,21 +30,9 @@ try {
 }
 catch(error){
     console.error('Error fetching data:', error);
-    alert('Failed to load client and employee data.');
 }
 // ----------------------------------------------------------------------------------
-
-document.getElementById("client_select_option").addEventListener("change", function(event){
-    let data = cachedClients.find(d=> d._id == event.target.value);
-
-    document.getElementById("email").value = data?.email;
-    document.getElementById("clientAddress").value = data?.address;
-    document.getElementById("billingAddress").value = data?.address;
-})
-
-// ----------------------------------------------------------------------------------
-
-
+let cachedProject = [];
 async function showProjectDropdown(){
     const r1 = await fetch(`${project_API}/get`, {
         method: "GET",
@@ -54,6 +42,9 @@ async function showProjectDropdown(){
         },
       });
     const r2 = await r1.json();
+    cachedProject = r2?.projects;
+
+    console.log("bro :- ",cachedProject)
     
     const project_select_option = document.getElementById("project_select_option");
     console.log(r2?.projects);
@@ -65,6 +56,28 @@ async function showProjectDropdown(){
     });
 }
 showProjectDropdown();
+// ----------------------------------------------------------------------------------
+
+function rtnProj(e){
+    let data = cachedProject.find(d=> d._id == e);
+    return data?.clientName;
+};
+// ----------------------------------------------------------------------------------
+document.getElementById("project_select_option").addEventListener("change", function(event){
+    let a1 = rtnProj(event.target.value);
+    console.log(a1);
+    document.getElementById("client_select_option").value = a1?._id;
+
+
+    
+    let data = cachedClients.find(d=> d._id == a1?._id);
+
+    document.getElementById("email").value = data?.email;
+    document.getElementById("clientAddress").value = data?.address;
+    document.getElementById("billingAddress").value = data?.address;
+
+})
+// ----------------------------------------------------------------------------------
 
 // Create Estimate API start
 const createEstimateForm = document.getElementById('create-estimate-form');

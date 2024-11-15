@@ -51,7 +51,7 @@ async function all_data_load_dashboard(){
             x+=`
             <tr data-id="${e[i]._id}">
             <td><input type="checkbox" class="checkbox_child" value="${e[i]?._id || '-'}"></td>
-                          <td>${i + 1}</td>
+                       
                           <td>${e[i].employee ? e[i].employee.name:'N/A' }</td>
                           <td>${e[i].leaveType ? e[i].leaveType.leaveName:'N/A'}</td>
                           <td>${e[i].from}</td>

@@ -135,12 +135,12 @@ document.getElementById('add-termination-form').addEventListener('submit', async
         loading_shimmer();
 
         const employee = document.getElementById('add_employee').value;
-        const department = document.getElementById('departments').value;
+        // const department = document.getElementById('departments').value;
         const TerminationType = document.getElementById('TerminationType').value;
         const terminationDate = document.getElementById('add_terminationDate').value;
         const reason = document.getElementById('add_reason').value;
 
-        document.getElementById('add-termination-form').reset(); // Clear form fields
+        // document.getElementById('add-termination-form').reset(); // Clear form fields
 
         const response = await fetch(`${termination_API}/post`, {
             method: 'POST',
@@ -148,7 +148,7 @@ document.getElementById('add-termination-form').addEventListener('submit', async
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ employee, department, TerminationType, terminationDate, reason })
+            body: JSON.stringify({ employee, TerminationType, terminationDate, reason })
         });
 
         const success = response.ok;
@@ -174,7 +174,7 @@ window.handleClickOnEdittermination = async function (_id) {
     populateEmployeeDropdown();
 
     document.getElementById("edit_employee").value = termination.employee?._id || '';
-    document.getElementById("edit_departments").value = termination.department?._id || '';
+    // document.getElementById("edit_departments").value = termination.department?._id || '';
     document.getElementById("edit_TerminationType").value = termination.TerminationType || '';
     document.getElementById("edit_terminationDate").value = termination.terminationDate ? new Date(termination.terminationDate).toISOString().split('T')[0] : '';
     document.getElementById("edit_reason").value = termination.reason || '';
@@ -193,7 +193,7 @@ window.handleClickOnEdittermination = async function (_id) {
 
             const updateData = {
                 employee: document.getElementById("edit_employee").value,
-                department: document.getElementById("edit_departments").value,
+                // department: document.getElementById("edit_departments").value,
                 TerminationType: document.getElementById("edit_TerminationType").value,
                 terminationDate: document.getElementById("edit_terminationDate").value,
                 reason: document.getElementById("edit_reason").value

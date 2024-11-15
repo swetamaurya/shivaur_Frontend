@@ -28,6 +28,7 @@ async function fetchEmployeeAndDepartments() {
             });
             const data = await response.json();
             cachedEmployee = data.users.employees || [];
+            
         } catch (error) {
             console.error('Error fetching Employee:', error);
         }
@@ -50,25 +51,39 @@ async function fetchEmployeeAndDepartments() {
 }
 
 // Populate Dropdowns for Add/Edit Forms
-function populateEmployeeDropdown() {
-    // const addEmpSelectOption = document.getElementById("add_employee");
+window.populateEmployeeDropdown = function populateEmployeeDropdown() {
+    const addEmpSelectOption = document.getElementById("add_employee");
     const editEmpSelectOption = document.getElementById("edit_employee");
+    let addEmployee = document.querySelector('#add_resignation').attributes[3]
 
     // addEmpSelectOption.innerHTML = `<option value="" disabled selected>Select Employee</option>`;
     editEmpSelectOption.innerHTML = `<option value="" disabled selected>Select Employee</option>`;
+    console.log('This is my response employee--->>>',cachedEmployee)
 
+    if(!addEmployee){
     cachedEmployee.forEach(employee => {
         const option = document.createElement("option");
-        option.value = employee._id;
-        option.textContent = employee.name;
+        option.value = employee._id ? employee._id: '';
+        option.textContent = employee.name ? employee.name : '';
         // addEmpSelectOption.appendChild(option);
         editEmpSelectOption.appendChild(option);
+    
     });
+  }
+  else{
+    cachedEmployee.forEach(employee => {
+        const option = document.createElement("option");
+        option.value = employee._id ? employee._id: '';
+        option.textContent = employee.name ? employee.name : '';
+        addEmpSelectOption.appendChild(option);
+    
+    });
+  }
 }
 
-function populateDepartmentDropdown() {
+window.populateDepartmentDropdown = function populateDepartmentDropdown() {
     // const addDeptSelectOption = document.getElementById("departments");
-    const editDeptSelectOption = document.getElementById("edit_departments");
+    const editDeptSelectOption = document.getElementById("edit-departments");
 
     // addDeptSelectOption.innerHTML = `<option value="" disabled selected>Select Department</option>`;
     editDeptSelectOption.innerHTML = `<option value="" disabled selected>Select Department</option>`;

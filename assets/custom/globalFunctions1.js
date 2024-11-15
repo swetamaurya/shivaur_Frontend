@@ -214,7 +214,7 @@ export async function loading_shimmer() {
             width: 100vw;
             height: 100vh;
             background-color: rgba(0, 0, 0, 0.7);
-            z-index: 10;
+            z-index: 9;
             display: flex;
             align-items: center;
             justify-content: center;

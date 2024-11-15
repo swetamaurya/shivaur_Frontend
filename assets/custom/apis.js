@@ -14,11 +14,12 @@ export const task_API = `${domain}/task`;
 export const leave_API = `${domain}/leaves`;
 export const leaveType_API = `${domain}/leavesType`;
 export const export_API = `${domain}/export`;
+export const dashboard_API = `${domain}/dashboard`;
 export const holiday_API = `${domain}/holiday`;
 export const termination_API = `${domain}/termination`;
 export const resignation_API = `${domain}/resignation`;
 export const policy_API = `${domain}/policy`;
-export const expense_API = `${domain}/sales/expenses`;
+export const expense_API = `${domain}/expenses`;
 export const estimate_API = `${domain}/estimates`;
 export const invoice_API = `${domain}/invoice`
 // --------------------------------------------------------------

@@ -37,7 +37,7 @@ window.onload = async () => {
         }
     })
     resp = await responseData.json();
-    document.querySelector('.note-editable').childNodes[0].textContent = resp.description
+    document.querySelector('.note-editable').children[0].innerText = resp.description
     document.getElementById("policy-name").value = resp.policyName
     document.getElementById("date").value = resp.date
     document.getElementById("department_select_option")[0].innerText = resp.department?.departments

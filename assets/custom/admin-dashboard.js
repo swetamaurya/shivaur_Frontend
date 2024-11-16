@@ -58,7 +58,7 @@ if (!localStorage.getItem("token")) {
         invoicesTable.innerHTML = data.recentInvoices.map(invoice => `
           <tr>
             <td><a href="invoice-view.html">${invoice.invoiceId}</a></td>
-            <td>${invoice.client}</td>
+            <td>${invoice.clientName}</td>
             <td>${invoice.dueDate}</td>
             <td>${invoice.total}</td>
             <td><span class="badge ${getInvoiceStatusClass(invoice.status)}">${invoice.status}</span></td>
@@ -73,16 +73,7 @@ if (!localStorage.getItem("token")) {
                 <td>${client.name}</td>
             <td>${client.email}</td>
             <td>${client.status}</td>
-          
-            <td class="text-end">
-              <div class="dropdown dropdown-action">
-                <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"><i class="material-icons">more_vert</i></a>
-                <div class="dropdown-menu dropdown-menu-right">
-                  <a class="dropdown-item" href="#"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
-                  <a class="dropdown-item" href="#"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
-                </div>
-              </div>
-            </td>
+           
           </tr>
         `).join("");
   
@@ -92,21 +83,13 @@ if (!localStorage.getItem("token")) {
           <tr>
             <td>
               <h2><a href="project-view.html">${project.projectName}</a></h2>
-              <small class="block text-ellipsis">
-                <span>Client: ${project.clientName}</span><br>
-                <span>Status: ${project.status}</span><br>
-                <span>Deadline: ${project.deadline}</span>
+ 
+                <span>  ${project.clientName}</span><br>
+                <span>  ${project.status}</span><br>
+                <span>  ${project.deadline}</span>
               </small>
             </td>
-            <td class="text-end">
-              <div class="dropdown dropdown-action">
-                <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"><i class="material-icons">more_vert</i></a>
-                <div class="dropdown-menu dropdown-menu-right">
-                  <a class="dropdown-item" href="#"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
-                  <a class="dropdown-item" href="#"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
-                </div>
-              </div>
-            </td>
+            
           </tr>
         `).join("");
   
@@ -118,15 +101,7 @@ if (!localStorage.getItem("token")) {
             <td>${product.category}</td>
             <td>${product.price}</td>
             <td>${product.status}</td>
-            <td class="text-end">
-              <div class="dropdown dropdown-action">
-                <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"><i class="material-icons">more_vert</i></a>
-                <div class="dropdown-menu dropdown-menu-right">
-                  <a class="dropdown-item" href="#"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
-                  <a class="dropdown-item" href="#"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
-                </div>
-              </div>
-            </td>
+         
           </tr>
         `).join("");
   

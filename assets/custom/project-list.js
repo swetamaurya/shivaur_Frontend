@@ -137,9 +137,9 @@ async function all_data_load_dashboard(){
                             <div class="dropdown dropdown-action">
                                 <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a  href="project-view.html?id=${e?._id}" class="dropdown-item" ><i class="fa-regular fa-eye"></i> View</a>
-                                    <a  href="edit-project.html?id=${e?._id}" class="dropdown-item" ><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
-                                    <a class="dropdown-item" onclick="individual_delete('${e?._id}')" href="#" data-bs-toggle="modal" data-bs-target="#delete_data"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
+                                    <a  href="project-view.html?id=${e?._id}" class="dropdown-item projectViewBtn" ><i class="fa-regular fa-eye"></i> View</a>
+                                    <a  href="edit-project.html?id=${e?._id}" class="dropdown-item projectEditBtn" ><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
+                                    <a class="dropdown-item projectDeleteBtn" onclick="individual_delete('${e?._id}')" href="#" data-bs-toggle="modal" data-bs-target="#delete_data"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
                                 </div>
                             </div>
                         </td>
@@ -168,9 +168,58 @@ async function all_data_load_dashboard(){
     try{
         checkbox_function();
         remove_loading_shimmer();
+        document.dispatchEvent(new Event('removeDataFromProject'))
     } catch(error){console.log(error)}
 }
 
 // On page load, load employee data for the dashboard
 all_data_load_dashboard();
 objects_data_handler_function(all_data_load_dashboard);
+
+// Remove Data When Employee Logged In
+document.addEventListener('removeDataFromProject',()=>{
+    let addProjectButton = document.getElementById('add-project-btn')
+    let projectAction = document.getElementById('project-action');
+    let projectTable = document.getElementById('projectData').children
+    let downloadExcelFile = document.getElementById('download_excel_multiple_file');
+    let deleteButton = document.getElementById('delete_btn_multiple_file')
+    if(User_role == "Employee"){
+        addProjectButton.remove();
+        // projectAction.remove();
+        downloadExcelFile.remove();
+        deleteButton.remove();
+        try {
+            ['projectEditBtn','projectDeleteBtn'].map
+            (f=>document.querySelectorAll(`.${f}`).forEach(e=> {
+                console.log('These are my classes----->>>>> ',f)
+                e.style.display = 'none'
+            }));
+            Array.from(document.querySelectorAll('.projectViewBtn'),(e=>{e.style.display='inline-block'}))
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    else if(User_role == "HR"){
+        addProjectButton.remove();
+        downloadExcelFile.remove();
+        deleteButton.remove();
+        try {
+            ['projectViewBtn','projectDeleteBtn'].map
+            (f=>document.querySelectorAll(`.${f}`).forEach(e=> {
+                console.log('These are my classes----->>>>> ',f)
+                e.style.display = 'none'
+            }));
+            Array.from(document.querySelectorAll('.projectEditBtn'),(e=>{e.style.display='inline-block'}))
+        } catch (error) {
+            console.log(error)
+        }
+    }
+})
+
+
+
+
+
+
+
+

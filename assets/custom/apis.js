@@ -1,6 +1,6 @@
 // --------------------------------------------------------------
-// const domain = 'https://shivaur-crm.onrender.com';
-const domain = 'http://localhost:3000';
+const domain = 'https://shivaur-crm.onrender.com';
+// const domain = 'http://localhost:3000';
 // const domain = 'https://www.microcodepgmt.com'
 // --------------------------------------------------------------
 export const delete_API = `${domain}/delete/all`;

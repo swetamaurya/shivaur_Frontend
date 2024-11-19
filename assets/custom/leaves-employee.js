@@ -107,7 +107,7 @@ async function all_data_load_dashboard() {
 
         if (r && r.length > 0) {
             r.forEach(e => {
-                const designation = getCachedDesignation(e.leaveType);
+                // const designation = getCachedDesignation(e.leaveType);
                 tableRows += `
                     <tr data-id="${e._id || '-'}">
                         <td><input type="checkbox" class="checkbox_child" value="${e._id || '-'}"></td>
@@ -300,7 +300,7 @@ window.handleClickOnEditLeaves = async function handleClickOnEditLeaves(e){
 
     try{
         document.getElementById("update-id").values = d1?._id;
-        document.getElementById("edit-leaveType").value = d1?.leaveType || '';
+        document.getElementById("edit-leaveType").value = d1?.leaveType._id|| '';
         document.getElementById("edit-from").value = formatDateForInput(d1?.from) || '';
         document.getElementById("edit-to").value = formatDateForInput(d1?.to) || '';
         document.getElementById("edit-noOfDays").value = d1?.noOfDays || '';

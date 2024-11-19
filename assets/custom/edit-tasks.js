@@ -39,14 +39,17 @@ async function dropdownForAddTask(){
   const r4 = (await r3.json());
 
   const dropdownContent_my_shivaur_mohit = document.getElementById("dropdownContent_my_shivaur_mohit");
-  r4?.users?.employees.map((e) => {
+  console.log("brororor ;_------------ ",r4?.users?.employee)
+
+  let e = r4?.users?.employee;
+  // r4?.users?.employee.map((e) => {
     let d1 = document.createElement("div");
     d1.innerHTML = `
-                    <input type="checkbox" value="${e._id}" class="assignee-checkbox_my_shivaur_mohit">
-                    <label class="checkbox-label_my_shivaur_mohit">${e.name} (${e.userId})</label>`;
+                    <input type="checkbox" value="${e?._id}" class="assignee-checkbox_my_shivaur_mohit">
+                    <label class="checkbox-label_my_shivaur_mohit">${e?.name} (${e?.userId})</label>`;
     d1.classList.add("checkbox-container_my_shivaur_mohit");
     dropdownContent_my_shivaur_mohit.appendChild(d1);    
-  });
+  // });
 }
 // ==================================================================================================================
 
@@ -81,7 +84,8 @@ async function editTaskDataUpdate() {
     let a7 = document.getElementById("project_select_option");
     
     a1.value = r2?.startDate || '-';
-    a2.value = r2?.status || '-';
+    a2[0].innerText = r2?.status || '-';
+    console.log("brohter ;---- ", r2?.status)
     a3.value = r2?.title || '-';
     a4.value = r2?.taskDescription || '-';
     a5.value = r2?._id || '-';
@@ -136,7 +140,8 @@ async function editTaskDataUpdate() {
     };
     assignee_drop_down_checkbox();
   } catch(error){
-    window.location.href = 'tasks.html';
+    // window.location.href = 'tasks.html';
+    console.log(error)
   }
   // ----------------------------------------------------------------------------------------------------
   try{

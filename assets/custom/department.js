@@ -6,15 +6,110 @@ if (!localStorage.getItem("token")) {
 import { checkbox_function } from './multi_checkbox.js';
 import { status_popup, loading_shimmer, remove_loading_shimmer } from './globalFunctions1.js';
 import { capitalizeFirstLetter } from './globalFunctions2.js'
-import { departments_API } from './apis.js';
+import { departments_API,global_search_API } from './apis.js';
 // -------------------------------------------------------------------------
 import {individual_delete, objects_data_handler_function} from './globalFunctionsDelete.js';
 window.individual_delete = individual_delete;
 // -------------------------------------------------------------------------
 import {} from "./globalFunctionsExport.js";
+import {rtnPaginationParameters, setTotalDataCount} from './globalFunctionPagination.js';
+
 // =================================================================================
 const token = localStorage.getItem('token');
 // =================================================================================
+
+// Function to handle search and update the same table
+async function handleSearch() {
+    const searchFields = ["departments"]; // IDs of input fields
+    const searchType = "Department"; // Type to pass to the backend
+    const tableData = document.getElementById("departmentData");
+    let tableContent = ''; // Initialize table content
+  
+    try {
+      // Show loading shimmer
+      loading_shimmer();
+  
+      // Construct query parameters for the search
+      const queryParams = new URLSearchParams({ type: searchType });
+      searchFields.forEach((field) => {
+        const value = document.getElementById(field)?.value;
+        if (value) queryParams.append(field, value);
+      });
+  
+      // Fetch search results
+      const response = await fetch(`${global_search_API}?${queryParams.toString()}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+  
+      const res = await response.json();
+  
+      if (response.ok && res.data?.length > 0) {
+        // If search results exist, render them in the table
+        const departments = res.data;
+  
+        departments.forEach((department) => {
+          tableContent += `
+            <tr data-id="${department._id}">
+              <td><input type="checkbox" class="checkbox_child" value="${department._id || '-'}"></td>
+              <td>${capitalizeFirstLetter(department?.departments) || '-'}</td>
+              <td>
+                <div class="dropdown dropdown-action">
+                  <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="material-icons">more_vert</i>
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" onclick="handleClickOnEditDepartment('${department._id}')" data-bs-toggle="modal" data-bs-target="#edit_department">
+                      <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                    </a>
+                    <a class="dropdown-item" onclick="individual_delete('${department._id}')" data-bs-toggle="modal" data-bs-target="#delete_department">
+                      <i class="fa-regular fa-trash-can m-r-5"></i> Delete
+                    </a>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          `;
+        });
+      } else {
+        // No results found
+        tableContent = `
+          <tr>
+            <td colspan="8" class="text-center">
+              <i class="fa-solid fa-times"></i> No results found
+            </td>
+          </tr>
+        `;
+      }
+    } catch (error) {
+      console.error("Error during search:", error);
+      // Handle errors gracefully
+      tableContent = `
+        <tr>
+          <td colspan="8" class="text-center">
+            <i class="fa-solid fa-times"></i> An error occurred during search
+          </td>
+        </tr>
+      `;
+    } finally {
+      // Update the table with results or error message
+      tableData.innerHTML = tableContent;
+      checkbox_function(); // Reinitialize checkboxes
+      remove_loading_shimmer(); // Remove loading shimmer
+    }
+  }
+  
+
+
+// Event listener for search button
+document.getElementById("searchButton").addEventListener("click", (e) => {
+    e.preventDefault();
+    handleSearch(); // Trigger search
+});
+
 let res = [];
 
  // Load Department List
@@ -30,7 +125,7 @@ async function all_data_load_dashboard() {
         table.innerHTML = ''; // Clear previous data
         let rows = [];
 
-        const response = await fetch(`${departments_API}/get`, {
+        const response = await fetch(`${departments_API}/get${rtnPaginationParameters()}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -38,8 +133,12 @@ async function all_data_load_dashboard() {
             }
         });
 
-        res = await response.json(); // Fetch and parse department data
+        let r2 = await response.json(); // Fetch and parse department data
+
+        res = r2.data;
         console.log("Department Data:", res); // Log fetched data
+
+        setTotalDataCount(r2?.totalDepartments);
 
         console.log(res)
 

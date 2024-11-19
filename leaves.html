@@ -87,6 +87,16 @@
           </div>
         </div>
 
+        <div class="row">
+          <div class="col-sm-12 col-md-6">
+
+
+            <div class="dataTables_length" id="DataTables_Table_0_length"> </div>
+
+          </div>
+          
+          
+        </div>
 
         <div class="row filter-row">
           <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
@@ -139,6 +149,12 @@
             </div>
           </div>
         </div>
+
+        
+        <div class="row mt-4" id="pagination_footer">
+        </div>
+
+
       </div>
 
 
@@ -825,25 +841,8 @@
     data-cf-settings="a584005f29a7ae81ebc6d9e7-|49" defer></script>
 
 </body>
-<script>
-  $(document).ready(function () {
-    // Load header
-    $('#header-placeholder').load('header.html', function () {
-      // Fetch role from localStorage
-      var userRole = localStorage.getItem('User_role');
+<script src="./assets/custom/sidebar.js"></script>
 
-      // Inject role into the header-role span
-      if (userRole) {
-        $('#role').text(userRole);
-      } else {
-        $('#role').text('Guest');
-      }
-    });
-
-
-    $('#sidebar-placeholder').load('sidebar.html');
-  });
-</script>
 <!-- Mirrored from  /html/template/leaves.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 16 Sep 2024 06:20:57 GMT -->
 
 </html>

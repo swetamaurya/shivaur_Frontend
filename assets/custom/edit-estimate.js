@@ -19,6 +19,7 @@ try {
     });
     const res = await response.json();
     cachedClients = res?.users?.clients;
+
     
     const client_select_option = document.getElementById("client_select_option");
     res.users.clients.forEach((client) => {
@@ -33,15 +34,17 @@ catch(error){
     alert('Failed to load client and employee data.');
 }
 // ----------------------------------------------------------------------------------
-document.getElementById("client_select_option").addEventListener("change", function(event){
-    let data = cachedClients.find(d=> d._id == event.target.value);
-    
-    document.getElementById("email").value = data?.email;
-    document.getElementById("clientAddress").value = data?.address;
-    document.getElementById("billingAddress").value = data?.address;
-})
-// =================================================================================
+// document.getElementById("client_select_option").addEventListener("change", function(event){
+//     let data = cachedClients.find(d=> d._id == event.target.value);
+//     console.log("bralsdfjaldfjo :- ",data)
 
+    
+//     document.getElementById("email").value = data?.email;
+//     document.getElementById("clientAddress").value = data?.address;
+//     document.getElementById("billingAddress").value = data?.address;
+// })
+// ----------------------------------------------------------------------------------
+let cachedProject = [];
 async function showProjectDropdown(){
     const r1 = await fetch(`${project_API}/get`, {
         method: "GET",
@@ -51,9 +54,13 @@ async function showProjectDropdown(){
         },
       });
     const r2 = await r1.json();
+    cachedProject = r2?.data;
+
+    console.log("bro :- ",cachedProject)
     
     const project_select_option = document.getElementById("project_select_option");
-    r2?.projects.map((e) => {
+    console.log(r2?.projects);
+    cachedProject.map((e) => {
         let a1 = document.createElement("option");
         a1.value = e?._id || '-';
         a1.text = `${e?.projectName} (${e?.projectId})` || '-' ;
@@ -61,6 +68,28 @@ async function showProjectDropdown(){
     });
 }
 showProjectDropdown();
+// ----------------------------------------------------------------------------------
+
+function rtnProj(e){
+    let data = cachedProject.find(d=> d._id == e);
+    return data?.clientName;
+};
+// ----------------------------------------------------------------------------------
+document.getElementById("project_select_option").addEventListener("change", function(event){
+    let a1 = rtnProj(event.target.value);
+    console.log(a1);
+    document.getElementById("client_select_option").value = a1?._id;
+
+
+    
+    let data = cachedClients.find(d=> d._id == a1?._id);
+
+    document.getElementById("email").value = data?.email;
+    document.getElementById("clientAddress").value = data?.address;
+    document.getElementById("billingAddress").value = data?.address;
+
+})
+
 // =================================================================================
 // =================================================================================
 // =================================================================================
@@ -87,9 +116,11 @@ async function load_edit_data(){
             throw new Error();
         }
         const res = await responseData.json()
+
+        console.log("rssssls sl :- ",res, " lsdlfska :- ",res?.client)
     
         document.getElementById("project_select_option").value = res?.project;
-        document.getElementById("client_select_option").value = res?.client;
+        document.getElementById("client_select_option").value = res?.client?._id;
         document.getElementById("email").value = res?.email;
         document.getElementById("estimateDate").value = res?.estimateDate;
         document.getElementById("expiryDate").value = res?.expiryDate;

@@ -9,6 +9,9 @@ import { leave_API, leaveType_API } from './apis.js';
 // -------------------------------------------------------------------------
 import {individual_delete, objects_data_handler_function} from './globalFunctionsDelete.js';
 window.individual_delete = individual_delete;
+// -------------------------------------------------------------------------
+import {rtnPaginationParameters, setTotalDataCount} from './globalFunctionPagination.js';
+// -------------------------------------------------------------------------
 import {} from "./globalFunctionsExport.js";
 // =================================================================================
 const token = localStorage.getItem('token');
@@ -23,8 +26,7 @@ async function leaveSelectOption() {
                 'Content-Type': 'application/json'
             }
         });
-        const res = await response.json();
-        console.log("Leave Types: ", res);
+        const res = (await response.json())?.data;
 
         let t1 = document.getElementById("edit-leaveType");
         let t2 = document.getElementById("leaveType");
@@ -58,8 +60,8 @@ async function fetchDesignationsAndDepartments() {
                     'Authorization': `Bearer ${token}`,
                 },
             });
-            cachedDesignations = await designationResponse.json();
-            console.log("Designations:", cachedDesignations);
+            let r1 = await designationResponse.json();    
+            cachedDesignations = (r1)?.data;
         } catch (error) {
             console.error('Error fetching designations:', error);
         }
@@ -84,7 +86,7 @@ async function all_data_load_dashboard() {
     await fetchDesignationsAndDepartments();
 
     try {
-        const response = await fetch(`${leave_API}/get`, {
+        const response = await fetch(`${leave_API}/get${rtnPaginationParameters()}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -92,6 +94,7 @@ async function all_data_load_dashboard() {
             }
         });
         const res = await response.json();
+        setTotalDataCount(res?.summary?.totalRecords);
 
         // Display the leave type counts
         document.getElementById('total_medical_leave').textContent = res.leaveTypeCounts['Medical Leave'] || 0;

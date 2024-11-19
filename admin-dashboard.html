@@ -49,7 +49,7 @@
       <div id="header-placeholder"></div>
 
       <div id="sidebar-placeholder"></div>
- >
+ 
 
       <div class="page-wrapper">
         <div class="content container-fluid pb-0">
@@ -130,6 +130,7 @@
                         <tr>
                           <th>Invoice ID</th>
                           <th>Client Name</th>
+                          <th>Project Name</th>
                           <th>Due Date</th>
                           <th>Total</th>
                           <!-- <th class="text-end">Action</th> -->
@@ -155,7 +156,9 @@
                       <thead>
                         <tr>
                           <th>Client Name</th>
+                         
                           <th> Email</th>
+                          <th>Contact Number</th>
                            <th>Status</th>
                           <!-- <th class="text-end">Action</th> -->
                         </tr>
@@ -185,7 +188,8 @@
                           <th>Project Name</th>
                           <th>Client Name</th>
                           
-                          <th>Deadline</th><th>Status</th>
+                          <th>Deadline</th>
+                          <th>Status</th>
                            <!-- <th class="text-end">Action</th> -->
                         </tr>
                       </thead>
@@ -287,25 +291,8 @@
 ></script> 
 
   </body> 
-  <script>
-    $(document).ready(function () {
-        // Load header
-        $('#header-placeholder').load('header.html', function() {
-            // Fetch role from localStorage
-            var userRole = localStorage.getItem('User_role');
-            
-            // Inject role into the header-role span
-            if (userRole) {
-                $('#role').text(userRole);
-            } else {
-                $('#role').text('Guest');
-            }
-        });
-    
+  <script src="./assets/custom/sidebar.js"></script>
 
-         $('#sidebar-placeholder').load('sidebar.html');
-    });
-</script>
 
 
  

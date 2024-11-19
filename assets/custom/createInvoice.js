@@ -34,6 +34,10 @@ catch(error){
 // ----------------------------------------------------------------------------------
 let cachedProject = [];
 async function showProjectDropdown(){
+    try{
+        loading_shimmer();
+    } catch(error){console.log(error)}
+    // -----------------------------------------------------------------------------------
     const r1 = await fetch(`${project_API}/get`, {
         method: "GET",
         headers: {
@@ -42,18 +46,22 @@ async function showProjectDropdown(){
         },
       });
     const r2 = await r1.json();
-    cachedProject = r2?.projects;
+    cachedProject = r2?.data;
 
     console.log("bro :- ",cachedProject)
     
     const project_select_option = document.getElementById("project_select_option");
     console.log(r2?.projects);
-    r2?.projects.map((e) => {
+    cachedProject.map((e) => {
         let a1 = document.createElement("option");
         a1.value = e?._id || '-';
         a1.text = `${e?.projectName} (${e?.projectId})` || '-' ;
         project_select_option.appendChild(a1);
     });
+    // ----------------------------------------------------------------------------------------------------
+    try{
+        remove_loading_shimmer();
+    } catch(error){console.log(error)}
 }
 showProjectDropdown();
 // ----------------------------------------------------------------------------------

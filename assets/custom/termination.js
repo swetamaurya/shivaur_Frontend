@@ -5,15 +5,117 @@ if (!localStorage.getItem("token")) {
 import { checkbox_function } from './multi_checkbox.js';
 import { status_popup, loading_shimmer, remove_loading_shimmer } from './globalFunctions1.js';
 import { formatDate, capitalizeFirstLetter } from './globalFunctions2.js'
-import { user_API, termination_API, departments_API } from './apis.js';
+import { user_API, termination_API, global_search_API, } from './apis.js';
 // -------------------------------------------------------------------------
 import {individual_delete, objects_data_handler_function} from './globalFunctionsDelete.js';
 window.individual_delete = individual_delete;
+import {rtnPaginationParameters, setTotalDataCount} from './globalFunctionPagination.js';
+
 // -------------------------------------------------------------------------
 import {} from "./globalFunctionsExport.js";
 // =================================================================================
 const token = localStorage.getItem('token');
 // =================================================================================
+
+async function handleSearch() {
+    const searchFields = ["employee.name"]; // Fields to search
+    const searchType = "termination"; // Type to pass to the backend
+    const tableData = document.getElementById("termination-table-body");
+    let rows = '';
+
+    try {
+        loading_shimmer();
+
+        // Construct query parameters for the search
+        const queryParams = new URLSearchParams({ type: searchType });
+        searchFields.forEach((field) => {
+            const value = document.getElementById(field)?.value;
+            console.log(`Field: ${field}, Value: ${value}`); // Debug log
+            if (value) {
+                queryParams.append(field, value);
+            }
+        });
+
+        console.log("Query Parameters:", queryParams.toString()); // Debug log
+
+        // Fetch search results
+        const response = await fetch(`${global_search_API}?${queryParams.toString()}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+        }
+
+        const res = await response.json();
+        console.log("Search Results:", res); // Debug log
+
+        if (res.data?.length > 0) {
+            res.data.forEach((e) => {
+                const employeeName = e.employee ? e.employee.name : '-';
+                const terminationType = e.terminationType || '-';
+                const reason = e.reason || '-';
+                const terminationDate = e.terminationDate
+                    ? new Date(e.terminationDate).toLocaleDateString()
+                    : '-';
+
+                rows += `
+                    <tr data-id="${e._id}">
+                        <td><input type="checkbox" class="checkbox_child" value="${e._id || '-'}"></td>
+                        <td>${employeeName}</td>
+                        <td>${capitalizeFirstLetter(terminationType)}</td>
+                        <td>${terminationDate}</td>
+                        <td>${reason}</td>
+                        <td>
+                            <div class="dropdown dropdown-action">
+                                <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="material-icons">more_vert</i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a class="dropdown-item" onclick="handleClickOnEditTermination('${e._id}')" data-bs-toggle="modal" data-bs-target="#edit_termination">
+                                        <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                                    </a>
+                                    <a class="dropdown-item" onclick="individual_delete('${e._id}')" data-bs-toggle="modal" data-bs-target="#delete_termination">
+                                        <i class="fa-regular fa-trash-can m-r-5"></i> Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>`;
+            });
+        } else {
+            // If no data is found, show a placeholder message
+            rows = `
+                <tr>
+                    <td colspan="6" class="text-center">No results found</td>
+                </tr>`;
+        }
+
+        tableData.innerHTML = rows; // Update table content
+        checkbox_function(); // Reinitialize checkbox functionality
+    } catch (error) {
+        console.error("Error during search:", error);
+        // Display an error message in the table
+        tableData.innerHTML = `
+            <tr>
+                <td colspan="6" class="text-center">An error occurred while loading data</td>
+            </tr>`;
+    } finally {
+        remove_loading_shimmer(); // Remove the loading shimmer
+    }
+}
+
+
+
+// Event listener for search button
+document.getElementById("searchButton").addEventListener("click", (e) => {
+    e.preventDefault();
+    handleSearch(); // Trigger search
+});
 
 
 // Caching employees and departments to avoid redundant API calls
@@ -72,7 +174,7 @@ async function all_data_load_dashboard() {
         table.innerHTML = ''; // Clear previous data
         let rows = [];
 
-        const response = await fetch(`${termination_API}/getAll`, {
+        const response = await fetch(`${termination_API}/getAll${rtnPaginationParameters()}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -80,7 +182,9 @@ async function all_data_load_dashboard() {
             }
         });
 
-        res = await response.json(); // Populate global res array with termination data
+        let r2 = await response.json(); // Populate global res array with termination data\
+        res = r2?.data;
+        setTotalDataCount(r2?.totalTerminations)
         console.log("Termination Data Loaded in `res`:", res); // Log `res` to check data
 
         res.forEach(e => {

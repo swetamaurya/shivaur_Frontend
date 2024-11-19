@@ -13,7 +13,7 @@ let id_param = new URLSearchParams(window.location.search).get("id");
 // ===============================================================================================================
 const newOption = document.createElement("option");
 newOption.value = localStorage.getItem('User_id');
-newOption.text = localStorage.getItem('User_name');
+newOption.text = localStorage.getItem('User_name'); 
 const select = document.getElementById("assigned_by_select_option");
 select.add(newOption);
 select.value = newOption.value;
@@ -32,8 +32,8 @@ async function dropdownForAddTask(){
   const r2 = await r1.json();
   
   const project_select_option = document.getElementById("project_select_option");
-  console.log(r2?.projects)
-  r2?.projects.map((e) => {
+  console.log(r2?.data)
+  r2?.data.map((e) => {
     let a1 = document.createElement("option");
     a1.value = e?._id || '-';
     a1.text = `${e?.projectName} (${e?.projectId})` || '-' ;

@@ -1,6 +1,7 @@
 // --------------------------------------------------------------
 const domain = 'https://shivaur-crm.onrender.com';
 // const domain = 'http://localhost:3000';
+// const domain = 'https://www.microcodepgmt.com'
 // --------------------------------------------------------------
 export const delete_API = `${domain}/delete/all`;
 export const user_API = `${domain}/user`;
@@ -22,4 +23,7 @@ export const policy_API = `${domain}/policy`;
 export const expense_API = `${domain}/expenses`;
 export const estimate_API = `${domain}/estimates`;
 export const invoice_API = `${domain}/invoice`
+export const global_search_API = `${domain}/global-search`
+
 // --------------------------------------------------------------
+ 

@@ -539,9 +539,51 @@
         <div class="content container-fluid pb-0">
  
           <div class="row">
-            <div class="col-xxl-8 col-lg-12 col-md-12">
+            <div class="col-lg-12 col-md-12">
+
+
               <div class="row">
-                <div class="col-lg-6 col-md-12">
+                <div class="col-lg-12 col-md-12">
+                  <div class="card mb-4">
+                    <div class="card-body row">
+                      <!-- Punch In/Out Status and Button -->
+                      <div class="col-md-6 text-center">
+                        <div class="punch-status-box">
+                           <div class="time-display">
+                            <span>Punch in:</span>
+                            <span id="workSessionTime">00:00:00</span>
+                          </div>
+                          <div class="time-display">
+                            <span>Total Hours:</span>
+                            <span id="workHoursDisplay">00:00:00</span>
+                          </div>
+                          <button id="punchButton" class="btn btn-warning mt-3">Punch In</button>
+                        </div>
+                      </div>
+              
+                      <!-- Break In/Out Status and Button -->
+                      <div class="col-md-6 text-center">
+                        <div class="punch-status-box">
+                           <div class="time-display">
+                            <span>Break in:</span>
+                            <span id="breakSessionTime">00:00:00</span>
+                          </div>
+                          <div class="time-display">
+                            <span>Total Break:</span>
+                            <span id="breakHoursDisplay">00:00:00</span>
+                          </div>
+                          <button id="breakButton" class="btn btn-info mt-3">Break In</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+              <div class="row"> 
+                <!-- <div class="col-lg-12 col-md-12">
                   <div class="card employee-welcome-card flex-fill">
                     <div class="card-body">
                       <div class="welcome-info">
@@ -563,9 +605,8 @@
                   </div>
 
    
-                  </div> 
-                  <div class="row">
-                  <div class="col-lg-6 col-md-12">
+                  </div>  -->
+                  <div class="col-lg-12 col-md-12">
                     <div class="card flex-fill">
                       <div class="card-body">
                         <div class="statistic-header">
@@ -595,37 +636,37 @@
                           <div class="row">
                             <div class="col-md-4">
                               <div class="attendance-details">
-                                <h4 class="text-primary" id="">9</h4>
+                                <h4 class="text-primary" id="totalLeaves">9</h4>
                                 <p>Total Leaves</p>
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="attendance-details">
-                                <h4 class="text-pink">5.5</h4>
+                                <h4 class="text-pink" id="leavesTaken">5.5</h4>
                                 <p>Leaves Taken</p>
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="attendance-details">
-                                <h4 class="text-success">04</h4>
+                                <h4 class="text-success" id="leavesAbsent">04</h4>
                                 <p>Leaves Absent</p>
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="attendance-details">
-                                <h4 class="text-purple">0</h4>
+                                <h4 class="text-purple" id="pendingRequests">0</h4>
                                 <p>Pending Approval</p>
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="attendance-details">
-                                <h4 class="text-info">214</h4>
+                                <h4 class="text-info" id="workingDays">214</h4>
                                 <p>Working Days</p>
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="attendance-details">
-                                <h4 class="text-danger">2</h4>
+                                <h4 class="text-danger" id="unplannedLeaves">2</h4>
                                 <p>Loss of Pay</p>
                               </div>
                             </div>
@@ -657,13 +698,12 @@
                       </div>
                     </div>
                   </div>
-                </div>
 
                 
-              </div>
+              </div> 
             </div>
 
-            <div class="col-xxl-4 col-lg-12 col-md-12 d-flex">
+            <!-- <div class="col-xxl-4 col-lg-12 col-md-12 d-flex">
               <div class="card flex-fill">
                 <div class="card-body">
                   <div class="statistic-header">
@@ -890,7 +930,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
  
  
@@ -1580,26 +1620,11 @@
     data-cf-settings="a584005f29a7ae81ebc6d9e7-|49"
     defer
   ></script> 
+  <script src="./assets/custom/sidebar.js"></script>
+  <script type="module" src="./assets/custom/employeeDashboard.js"></script>
 
   </body> 
-  <script>
-    $(document).ready(function () {
-        // Load header
-        $('#header-placeholder').load('header.html', function() {
-            // Fetch role from localStorage
-            var userRole = localStorage.getItem('User_role');
-            
-            // Inject role into the header-role span
-            if (userRole) {
-                $('#role').text(userRole);
-            } else {
-                $('#role').text('Guest');
-            }
-        });
-    
-
-         $('#sidebar-placeholder').load('sidebar.html');
-    });
-</script>
+  <!-- <script src="./assets/custom/sidebar.js"></script>
+ -->
 
  </html>

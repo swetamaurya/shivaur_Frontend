@@ -58,12 +58,15 @@ if (!localStorage.getItem("token")) {
         invoicesTable.innerHTML = data.recentInvoices.map(invoice => `
           <tr>
             <td><a href="invoice-view.html">${invoice.invoiceId}</a></td>
-            <td>${invoice.clientName}</td>
+            <td>${invoice.client?.name || '-'}</td> <!-- Show client name -->
+                       <td>${invoice.project?.projectName || '-'}</td> <!-- Show client name -->
+
             <td>${invoice.dueDate}</td>
             <td>${invoice.total}</td>
             <td><span class="badge ${getInvoiceStatusClass(invoice.status)}">${invoice.status}</span></td>
           </tr>
         `).join("");
+        
   
         // Update recent clients
         const clientsTable = document.querySelector("#clientsTable tbody");
@@ -71,7 +74,10 @@ if (!localStorage.getItem("token")) {
           <tr>
             
                 <td>${client.name}</td>
+
             <td>${client.email}</td>
+                           <td>${client.mobile} 
+
             <td>${client.status}</td>
            
           </tr>
@@ -81,29 +87,25 @@ if (!localStorage.getItem("token")) {
         const projectsTable = document.querySelector("#projectsTable tbody");
         projectsTable.innerHTML = data.recentProjects.map(project => `
           <tr>
-            <td>
-              <h2><a href="project-view.html">${project.projectName}</a></h2>
- 
-                <span>  ${project.clientName}</span><br>
-                <span>  ${project.status}</span><br>
-                <span>  ${project.deadline}</span>
-              </small>
-            </td>
-            
+            <td>${project.projectName}</td>
+            <td>${project.clientName?.name || '-'}</td> <!-- Show client name -->
+            <td>${project.deadline}</td>
+            <td>${project.status}</td>
           </tr>
         `).join("");
+        
   
         // Update recent products
         const productsTable = document.querySelector("#productsTable tbody");
         productsTable.innerHTML = data.recentProducts.map(product => `
           <tr>
             <td>${product.productName}</td>
-            <td>${product.category}</td>
+            <td>${product.category?.category || '-'}</td> <!-- Show category name -->
             <td>${product.price}</td>
             <td>${product.status}</td>
-         
           </tr>
         `).join("");
+        
   
         // Remove loading shimmer
         remove_loading_shimmer();
@@ -125,4 +127,6 @@ if (!localStorage.getItem("token")) {
     // Load data on page load
     fetchDashboardData();
   });
+  
+
   

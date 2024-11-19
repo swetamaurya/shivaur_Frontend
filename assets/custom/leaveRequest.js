@@ -1,10 +1,114 @@
-import {leave_API, leaveType_API} from './apis.js'
+import {leave_API, leaveType_API, global_search_API} from './apis.js'
 import { checkbox_function } from './multi_checkbox.js';
 import { status_popup, loading_shimmer, remove_loading_shimmer } from './globalFunctions1.js';
 import {individual_delete, objects_data_handler_function} from './globalFunctionsDelete.js';
 window.individual_delete = individual_delete;
+import {rtnPaginationParameters, setTotalDataCount} from './globalFunctionPagination.js';
+
 // import { objects_data_handler_function} from './globalFunctionsDelete.js';
 const token = localStorage.getItem('token');
+
+
+
+async function handleSearch() {
+  const searchFields = ["leaveStatus", "name"]; // IDs of input fields
+  const searchType = "leaves"; // Type to pass to the backend
+  const tableData = document.getElementById("leavesData");
+  let tableContent = ''; // Initialize table content
+
+  try {
+      loading_shimmer();
+
+      // Construct query parameters for the search
+      const queryParams = new URLSearchParams({ type: searchType });
+      searchFields.forEach((field) => {
+          const value = document.getElementById(field)?.value;
+          if (value) queryParams.append(field, value);
+      });
+
+      // Fetch search results
+      const response = await fetch(`${global_search_API}?${queryParams.toString()}`, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+          },
+      });
+
+      const res = await response.json();
+      console.log("Search API Response:", res); // Debug the response
+
+      if (res.data?.length > 0) {
+          res.data.forEach((leave) => {
+              tableContent += `
+                  <tr data-id="${leave._id}">
+                      <td><input type="checkbox" class="checkbox_child" value="${leave._id || '-'}"></td>
+                      <td>${leave.employee ? leave.employee.name : 'N/A'}</td>
+                      <td>${leave.leaveType ? leave.leaveType.leaveName : 'N/A'}</td>
+                      <td>${leave.from}</td>
+                      <td>${leave.to}</td> 
+                      <td>${leave.noOfDays}</td>
+                      <td>${leave.reason}</td>
+                      <td>${leave.leaveStatus}</td>
+                      <td class="text-end">
+                          <div class="dropdown dropdown-action">
+                              <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                  <i class="material-icons">more_vert</i>
+                              </a>
+                              <div class="dropdown-menu dropdown-menu-right">
+                                  <a onclick="handleClickToEditLeaves('${leave._id}')" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#edit_leave">
+                                      <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                                  </a>
+                                  <a class="dropdown-item" onclick="handleClickOnEditApproveLeaves('${leave._id}')" data-bs-toggle="modal" data-bs-target="#approve_leave">
+                                      <i class="fa-regular fa-thumbs-up"></i> Approve
+                                  </a>
+                                  <a class="dropdown-item" onclick="individual_delete('${leave._id}')" data-bs-toggle="modal" data-bs-target="#delete_data">
+                                      <i class="fa-regular fa-trash-can m-r-5"></i> Delete
+                                  </a>
+                              </div>
+                          </div>
+                      </td>
+                  </tr>`;
+          });
+      } else {
+          // No results found
+          tableContent = `
+              <tr>
+                  <td colspan="9" class="text-center">
+                      <i class="fa-solid fa-times"></i> No results found
+                  </td>
+              </tr>`;
+      }
+  } catch (error) {
+      console.error("Error during search:", error);
+      // Display error message in the table
+      tableContent = `
+          <tr>
+              <td colspan="9" class="text-center">
+                  <i class="fa-solid fa-times"></i> An error occurred during search
+              </td>
+          </tr>`;
+  } finally {
+      // Update the table with results or error message
+      tableData.innerHTML = tableContent;
+      console.log("Updated Table Content:", tableContent); // Debug the generated table rows
+      checkbox_function(); // Reinitialize checkboxes
+      remove_loading_shimmer(); // Remove loading shimmer
+  }
+}
+
+
+
+
+
+// =======================================================================================
+// Event listener for search button
+document.getElementById("searchButton").addEventListener("click", (e) => {
+  e.preventDefault();
+  handleSearch(); // Trigger search
+});
+
+
 
 async function leaveSelectOption() {
   try{
@@ -38,7 +142,7 @@ async function all_data_load_dashboard(){
       // loading_shimmer();
   } catch(error){console.log(error)}
     try{
-        const response = await fetch(`${leave_API}/get`,{
+        const response = await fetch(`${leave_API}/get${rtnPaginationParameters()}`,{
             method: 'GET',
             headers:{
                 'Authorization': `Bearer ${token}`,
@@ -46,6 +150,10 @@ async function all_data_load_dashboard(){
             }
         });
         let res = await response.json();
+        console.log("lasjkdfl as;sdk fjas;ld jfas;_ ",res);
+
+        setTotalDataCount(res?.summary?.totalRecords);
+
         let e = res.leaves
         for(let i=0; i<e.length; i++){
             x+=`

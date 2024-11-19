@@ -29,28 +29,29 @@ loginForm.addEventListener("submit", async (event) => {
             localStorage.setItem("User_role", roles);  // Store the user role
             localStorage.setItem("User_name",name);
 
-            // Redirect based on roles
-            if (roles === "Admin") {
-                window.location.href = 'admin-dashboard.html';
-            } else if (roles === "Employee") {
-                window.location.href = 'employee-dashboard.html';
-            } else if (roles === "Supervisor") {
-                window.location.href = 'supervisor-dashboard.html';
-            } else if (roles === "Client") {
-                localStorage.clear();
-                window.location.href = 'clients-list.html';
-            } else {
-                document.getElementById("response").innerHTML = `<i class="fa fa-times" aria-hidden="true"></i> Role not recognized.`;
-            }
+         // Redirect based on roles
+         if (roles === "Admin") {
+            window.location.href = 'admin-dashboard.html';
+        } else if (roles === "Employee") {
+            window.location.href = 'employee-dashboard.html';
+        } else if (roles == "HR") {
+            window.location.href = 'hr-dashboard.html';
+        } else if (roles == "Manager") {
+            // localStorage.clear();
+            window.location.href = 'manager-dashboard.html';
         } else {
-            document.getElementById("response").innerHTML = `<i class="fa fa-times" aria-hidden="true"></i> ${result?.message || "Login failed."}.`;
-            localStorage.clear();
+            document.getElementById("response").innerHTML = `<i class="fa fa-times" aria-hidden="true"></i> Role not recognized.`;
         }
-    } catch (error) {
-        document.getElementById("response").innerHTML = `<i class="fa fa-times" aria-hidden="true"></i> Server Down, please try again later..`;
+    } else {
+        document.getElementById("response").innerHTML = `<i class="fa fa-times" aria-hidden="true"></i> ${result?.message || "Login failed."}.`;
         localStorage.clear();
     }
+} catch (error) {
+    document.getElementById("response").innerHTML = `<i class="fa fa-times" aria-hidden="true"></i> Server Down, please try again later..`;
+    localStorage.clear();
+}
 });
+
 
 
 window.togglePasswordOnClick =  function togglePasswordOnClick(){

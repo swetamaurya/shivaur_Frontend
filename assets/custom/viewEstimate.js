@@ -11,39 +11,6 @@ const token = localStorage.getItem('token');
 // =========================================================================================
 // =========================================================================================
 // =========================================================================================
-async function clientsDetails(_id_param) {
-    try {
-        let r = await fetch(`${user_API}/get/${_id_param}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-        });
-        
-        let r2 = await r.json();
-
-        document.getElementById("clientName").innerText = r2?.name;
-        document.getElementById("clientph").innerText = r2?.mobile;
-        document.getElementById("clientMail").innerText = r2?.email;
-    } catch (error) {
-        console.error('Error updating client:', error);
-    }
-}
-async function projDetails(_id_param) {
-    const response = await fetch(`${project_API}/get/${_id_param}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-    });
-
-    let r2 = await response.json();
-
-    document.getElementById("proNm").innerHTML = `${r2?.projectName} (${r2?.projectId})`;    
-}
-// =========================================================================================
 
 // var resp;
 async function load_data() {
@@ -60,7 +27,7 @@ async function load_data() {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         }
-    })
+    });
     let resp = await responseData.json();
 
     console.log("bro :- ",resp)
@@ -77,7 +44,7 @@ async function load_data() {
             <td>${e.qty}</td>
             <td>₹ ${e.amount}</td>
             </tr>`;
-    })
+    });
     tableData.innerHTML = x;
 
 
@@ -99,12 +66,14 @@ async function load_data() {
         console.log(error);
     }
     try{
-        await clientsDetails(resp?.client);
+        document.getElementById("clientName").innerText = resp?.client?.name;
+        document.getElementById("clientph").innerText = resp?.client?.mobile;
+        document.getElementById("clientMail").innerText = resp?.client?.email;
     } catch(error){
         console.log(error);
     }
     try{
-        await projDetails(resp?.project);
+        document.getElementById("proNm").innerHTML = `${resp?.project?.projectName} (${resp?.project?.projectId})`;   
     } catch(error){
         console.log(error);
     }

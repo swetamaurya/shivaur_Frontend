@@ -90,10 +90,10 @@
       <div class="row filter-row mb-4">
         <div class="col-sm-9">
           <label class="col-form-label">Date</label>
-          <input class="form-control" type="date" id="date" />
+          <input class="form-control" type="date" id="searchDate" />
         </div>
         <div class="col-sm-3">
-          <button type="submit" class="btn btn-success w-100 mt-4">Search</button>
+          <button id="searchButton" class="btn btn-success w-100">Search</button>
         </div>
       </div>
   
@@ -101,7 +101,7 @@
       <div class="row">
         <div class="col-lg-12">
           <div class="table-responsive">
-            <table class="table table-striped custom-table mb-0">
+            <table class="table table-striped custom-table mb-0" class="table">
               <thead>
                 <tr>
                   <th>#</th>
@@ -517,25 +517,8 @@
 ></script>
 
 </body> 
-  <script>
-    $(document).ready(function () {
-        // Load header
-        $('#header-placeholder').load('header.html', function() {
-            // Fetch role from localStorage
-            var userRole = localStorage.getItem('User_role');
-            
-            // Inject role into the header-role span
-            if (userRole) {
-                $('#role').text(userRole);
-            } else {
-                $('#role').text('Guest');
-            }
-        });
-    
+  <script src="./assets/custom/sidebar.js"></script>
 
-         $('#sidebar-placeholder').load('sidebar.html');
-    });
-</script>
 
 <!-- Mirrored from  /html/template/attendance-employee.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 16 Sep 2024 06:03:15 GMT -->
 </html>

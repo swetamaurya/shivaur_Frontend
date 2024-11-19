@@ -4,16 +4,106 @@ if (!localStorage.getItem("token")) {
 // =================================================================================
 import { checkbox_function } from './multi_checkbox.js'; // Import checkbox functionality
 import { status_popup, loading_shimmer, remove_loading_shimmer } from './globalFunctions1.js';
-import { holiday_API } from './apis.js';
+import { holiday_API, global_search_API } from './apis.js';
 import {  formatDate,  capitalizeFirstLetter } from './globalFunctions2.js'
 // -------------------------------------------------------------------------
 import {individual_delete, objects_data_handler_function} from './globalFunctionsDelete.js';
 window.individual_delete = individual_delete;
 // -------------------------------------------------------------------------
 import {} from "./globalFunctionsExport.js";
+import {rtnPaginationParameters, setTotalDataCount} from './globalFunctionPagination.js';
+
 // =================================================================================
 const token = localStorage.getItem('token');
 // =================================================================================
+
+// Function to handle search and update the same table
+async function handleSearch() {
+    const searchFields = ["holidayName"]; // IDs of input fields
+    const searchType = "holiday"; // Type to pass to the backend
+    const tableData = document.getElementById("holidayData");
+    let tableContent = ''; // Initialize table content
+
+    try {
+        loading_shimmer(); // Show loading shimmer
+
+        // Construct query parameters for the search
+        const queryParams = new URLSearchParams({ type: searchType });
+        searchFields.forEach((field) => {
+            const value = document.getElementById(field)?.value;
+            if (value) queryParams.append(field, value);
+        });
+
+        // Fetch search results
+        const response = await fetch(`${global_search_API}?${queryParams.toString()}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        const res = await response.json();
+        console.log("Holiday Data Response:", res); // Debug the response
+
+        if (res.data?.length > 0) {
+            // Results found, generate table rows
+            tableContent = res.data.map((holiday) => `
+                <tr data-id="${holiday._id}">
+                    <td><input type="checkbox" class="checkbox_child" value="${holiday._id || '-'}"></td>
+                    <td>${capitalizeFirstLetter(holiday.holidayName)}</td>
+                    <td>${formatDate(holiday.holidayDate)}</td>
+                    <td>${capitalizeFirstLetter(holiday.offDays)}</td>
+                    <td>
+                        <div class="dropdown dropdown-action">
+                            <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" onclick="handleClickOnEditHoliday('${holiday._id}')" data-bs-toggle="modal" data-bs-target="#edit_holiday">
+                                    <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                                </a>
+                                <a class="dropdown-item" onclick="individual_delete('${holiday._id}')" data-bs-toggle="modal" data-bs-target="#delete_holiday">
+                                    <i class="fa-regular fa-trash-can m-r-5"></i> Delete
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        } else {
+            // No results found
+            tableContent = `
+                <tr>
+                    <td colspan="5" class='text-center'>
+                        <i class="fa-solid fa-times"></i> Data is not available, please insert the data
+                    </td>
+                </tr>`;
+        }
+
+        tableData.innerHTML = tableContent; // Update table content
+        checkbox_function(); // Apply checkbox functionality after updating the table
+    } catch (error) {
+        console.error("Error during search:", error);
+        // Display error message in the table
+        tableContent = `
+            <tr>
+                <td colspan="5" class="text-center">
+                    <i class="fa-solid fa-times"></i> An error occurred during search
+                </td>
+            </tr>`;
+        tableData.innerHTML = tableContent;
+    } finally {
+        remove_loading_shimmer(); // Remove loading shimmer
+    }
+}
+
+
+
+// Event listener for search button
+document.getElementById("searchButton").addEventListener("click", (e) => {
+    e.preventDefault();
+    handleSearch(); // Trigger search
+});
+
 
 
 let res = []; // Renaming `res` to `holidayData` for clarity
@@ -31,7 +121,7 @@ async function all_data_load_dashboard() {
     let rows = '';
 
     try {
-        const response = await fetch(`${holiday_API}/get`, {
+        const response = await fetch(`${holiday_API}/get${rtnPaginationParameters()}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -39,7 +129,10 @@ async function all_data_load_dashboard() {
             }
         });
 
-        res = await response.json(); // Assign the fetched data to `holidayData`
+        let r2 = await response.json(); // Assign the fetched data to `holidayData`
+        console.log("alsjd aslkd d d;+ ",r2)
+        setTotalDataCount(r2?.totalHolidays);
+        res = r2?.data;
         // console.log("Holiday Data:", holidayData);
 
         if(res.length>0) {

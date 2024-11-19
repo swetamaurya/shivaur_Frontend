@@ -883,24 +883,8 @@
     
     <script type="module" src="./assets/custom/userprofile.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-      $(document).ready(function () {
-        // Load header
-        $("#header-placeholder").load("header.html", function () {
-          // Fetch role from localStorage
-          var userRole = localStorage.getItem("User_role");
-  
-          // Inject role into the header-role span
-          if (userRole) {
-            $("#role").text(userRole);
-          } else {
-            $("#role").text("Guest");
-          }
-        });
-  
-        $("#sidebar-placeholder").load("sidebar.html");
-      });
-    </script>
+    <script src="./assets/custom/sidebar.js"></script>
+
 
     <script
       src="assets/js/bootstrap.bundle.min.js"

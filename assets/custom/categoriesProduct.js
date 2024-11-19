@@ -9,11 +9,93 @@ import { product_API } from './apis.js';
 // -------------------------------------------------------------------------
 import {individual_delete, objects_data_handler_function} from './globalFunctionsDelete.js';
 window.individual_delete = individual_delete;
+import {rtnPaginationParameters, setTotalDataCount} from './globalFunctionPagination.js';
+
 // -------------------------------------------------------------------------
 import {} from "./globalFunctionsExport.js";
 // =================================================================================
+import { global_search_API } from './apis.js'; // Define your global search API URL
+
 const token = localStorage.getItem('token');
 // =================================================================================
+
+ // Function to handle search and update the same table
+async function handleSearch() {
+  const searchFields = ["category"]; // IDs of input fields
+  const searchType = "category"; // Type to pass to the backend
+  const tableData = document.getElementById("categoriesData");
+  let tableContent = ""; // Initialize table content
+
+  try {
+    loading_shimmer();
+
+    // Construct query parameters for the search
+    const queryParams = new URLSearchParams({ type: searchType });
+    searchFields.forEach((field) => {
+      const value = document.getElementById(field)?.value;
+      if (value) queryParams.append(field, value);
+    });
+
+    // Fetch search results from the API
+    const response = await fetch(`${global_search_API}?${queryParams.toString()}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const res = await response.json();
+
+    if (response.ok && res.data && res.data.length > 0) {
+      // Data exists, build table rows
+      const categories = res.data;
+      categories.forEach((category, index) => {
+        tableContent += `
+          <tr data-id="${category?._id}">
+              <td><input type="checkbox" class="checkbox_child" value="${category?._id || '-'}"></td>
+              <td>${index + 1}</td>
+              <td>${category?.category || "-"}</td>
+              <td class="text-end">
+                  <div class="dropdown dropdown-action">
+                  <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown">
+                      <i class="material-icons">more_vert</i>
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-right">
+                      <a class="dropdown-item" onclick="editCategory('${category?._id}', '${category?.category || '-'}')" data-bs-toggle="modal" data-bs-target="#edit_data">
+                      <i class="fa fa-pencil m-r-5"></i> Edit
+                      </a>
+                      <a class="dropdown-item" onclick="deleteButtonFun('${category?._id}')" data-bs-toggle="modal" data-bs-target="#delete_data">
+                          <i class="fa-regular fa-trash-can m-r-5"></i> Delete
+                      </a>
+                  </div>
+                  </div>
+              </td>
+          </tr>`;
+      });
+    } else {
+      // No results found
+      tableContent = `<tr><td colspan="4" class="text-center">No results found</td></tr>`;
+    }
+  } catch (error) {
+    console.error("Error during search:", error);
+    // Display an error message in the table
+    tableContent = `<tr><td colspan="4" class="text-center">An error occurred during search</td></tr>`;
+  } finally {
+    // Update table content and remove loading shimmer
+    tableData.innerHTML = tableContent;
+    checkbox_function(); // Reinitialize checkboxes
+    remove_loading_shimmer();
+  }
+}
+
+// Event listener for search button
+document.getElementById("searchButton").addEventListener("click", (e) => {
+  e.preventDefault();
+  handleSearch(); // Trigger search
+});
+
+
 
 // Function to load categories and display them in the table
 async function all_data_load_dashboard() {
@@ -25,20 +107,22 @@ async function all_data_load_dashboard() {
   
   const categoriesTable = document.getElementById("categoriesData");
   try {
-      const response = await fetch(`${product_API}/categories/get`, {
+      const response = await fetch(`${product_API}/categories/get${rtnPaginationParameters()}`, {
           method: "GET",
           headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
       });
   
       const result = await response.json();
+      console.log("lkdkld ;- ",result);
+      setTotalDataCount(result?.totalCategories);
           
       if (response.ok) {
-          let res = result; // Store fetched categories in the global `res` array
-          let tableContent = "";
-          res.forEach((category, index) => {
+        let res = result?.categories; // Store fetched categories in the global `res` array
+        let tableContent = "";
+        res.forEach((category, index) => {
           tableContent += `
               <tr data-id="${category?._id}">
                   <td><input type="checkbox" class="checkbox_child" value="${category?._id || '-'}"></td>
@@ -60,10 +144,10 @@ async function all_data_load_dashboard() {
                   </div>
               </td>
               </tr>`;
-          });
-  
-          categoriesTable.innerHTML = tableContent;
-          checkbox_function();
+        });
+
+        categoriesTable.innerHTML = tableContent;
+        checkbox_function();
       }
   } catch (error) {
     console.error("Error loading categories:", error);

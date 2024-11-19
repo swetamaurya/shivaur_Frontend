@@ -62,10 +62,6 @@ async function load_data() {
         }
     })
     let resp = await responseData.json();
-
-    console.log("bro :- ",resp)
-
-
     const tableData = document.getElementById('tableData')
     var x = '';
     resp?.details.map((e,i)=>{
@@ -79,6 +75,8 @@ async function load_data() {
             </tr>`;
     })
     tableData.innerHTML = x;
+
+    console.log("brrr :--- ",resp)
 
 
     try{
@@ -99,12 +97,18 @@ async function load_data() {
         console.log(error);
     }
     try{
-        await clientsDetails(resp?.client);
+        // await clientsDetails(resp?.client);
+
+        document.getElementById("clientName").innerText = resp?.client?.name;
+        document.getElementById("clientph").innerText = resp?.client?.mobile;
+        document.getElementById("clientMail").innerText = resp?.client?.email;
     } catch(error){
         console.log(error);
     }
     try{
-        await projDetails(resp?.project);
+        // await projDetails(resp?.project);
+
+        document.getElementById("proNm").innerHTML = `${resp?.project?.projectName} (${resp?.project?.projectId})`; 
     } catch(error){
         console.log(error);
     }

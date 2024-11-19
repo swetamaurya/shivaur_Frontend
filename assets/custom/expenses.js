@@ -4,19 +4,121 @@ if (!localStorage.getItem("token")) {
 // =================================================================================
 import { checkbox_function } from './multi_checkbox.js';
 import { status_popup, loading_shimmer, remove_loading_shimmer } from './globalFunctions1.js';
-import { formatDate, capitalizeFirstLetter } from './globalFunctions2.js'
-import { user_API, expense_API } from './apis.js';
+import { formatDate  } from './globalFunctions2.js'
+import { user_API, expense_API,global_search_API } from './apis.js';
 // -------------------------------------------------------------------------
 import {individual_delete, objects_data_handler_function} from './globalFunctionsDelete.js';
 window.individual_delete = individual_delete;
 // -------------------------------------------------------------------------
 import {} from "./globalFunctionsExport.js";
+import {rtnPaginationParameters, setTotalDataCount} from './globalFunctionPagination.js';
+
 // =================================================================================
 const token = localStorage.getItem('token');
 // =================================================================================
 // =================================================================================
-// =================================================================================
-// =================================================================================
+
+// Function to handle search and update the same table
+async function handleSearch() {
+    const searchFields = ["expenseName", "purchaseDate"]; // IDs of input fields
+    const searchType = "expense"; // Type to pass to the backend
+    const tableData = document.getElementById("expenseTbody");
+    let tableContent = ''; // Initialize table content
+  
+    try {
+      // Show loading shimmer
+      loading_shimmer();
+  
+      // Construct query parameters for the search
+      const queryParams = new URLSearchParams({ type: searchType });
+      searchFields.forEach((field) => {
+        const value = document.getElementById(field)?.value;
+        if (value) queryParams.append(field, value);
+      });
+  
+      // Fetch search results
+      const response = await fetch(`${global_search_API}?${queryParams.toString()}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+  
+      const res = await response.json();
+  
+      if (response.ok && res.data?.length > 0) {
+        const expenses = res.data;
+  
+        expenses.forEach((e) => {
+          tableContent += `
+            <tr data-id=${e?._id}>
+              <td class="width-thirty"><input type="checkbox" class="checkbox_child" value="${e?._id || '-'}"></td>
+              <td>${e?.expenseName || '-'}</td>
+              <td>${rtnCltName(e?.purchaseBy) || '-'}</td>
+              <td>${formatDate(e?.purchaseDate) || '-'}</td>
+              <td>₹ ${e?.amount || 0}</td>
+              <td>${e?.paidBy || '-'}</td>
+              <td class="text-center">${e?.status || '-'}</td>
+              <td class="text-end">
+                <div class="dropdown dropdown-action">
+                  <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="material-icons">more_vert</i>
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <a onclick="handleClickToGenerateViewExpense('${e?._id}')" class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#view_data">
+                      <i class="fa-solid fa-eye m-r-5"></i> View
+                    </a>
+                    <a onclick="handleClickToGenerateEditExpense('${e?._id}')" class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_data">
+                      <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                    </a>
+                    <a class="dropdown-item" onclick="individual_delete('${e?._id}')" data-bs-toggle="modal" data-bs-target="#delete_data">
+                      <i class="fa-regular fa-trash-can m-r-5"></i> Delete
+                    </a>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          `;
+        });
+      } else {
+        // No results found
+        tableContent = `
+          <tr>
+            <td colspan="8" class="text-center">
+              <i class="fa-solid fa-times"></i> No results found
+            </td>
+          </tr>
+        `;
+      }
+    } catch (error) {
+      console.error("Error during search:", error);
+      // Handle errors gracefully
+      tableContent = `
+        <tr>
+          <td colspan="8" class="text-center">
+            <i class="fa-solid fa-times"></i> An error occurred during search
+          </td>
+        </tr>
+      `;
+    } finally {
+      // Update the table content and remove shimmer
+      tableData.innerHTML = tableContent;
+      checkbox_function(); // Reinitialize checkboxes
+      remove_loading_shimmer();
+    }
+  }
+  
+
+
+// Event listener for search button
+document.getElementById("searchButton").addEventListener("click", (e) => {
+    e.preventDefault();
+    handleSearch(); // Trigger search
+});
+
+
+
 let cachedClient = [];
 try {
   const response = await fetch(`${user_API}/data/get`, {
@@ -27,6 +129,7 @@ try {
       },
   });
   const resp = await response.json();
+  console.log("askldfja;ls as;ldfjkasd; fasd;lf;kasd j :- ",resp)
 
   cachedClient = resp?.users.employees;
   
@@ -61,32 +164,40 @@ catch(error){
 }
 // ------------------------------------------------------------------------------------------
 function rtnCltName(_id_pro) {
-  const rtnClt = cachedClient.find(d=> d?._id==_id_pro);
-  const rtnCltDetails = `${rtnClt?.name} (${rtnClt?.userId})`;
-  return rtnCltDetails;
+
+    const rtnClt = cachedClient.find(d=> d?._id==_id_pro);
+    console.log("lajksdfl asdflkasd f asfklj :----------------- ",rtnClt);
+    const rtnCltDetails = `${rtnClt?.name} (${rtnClt?.userId})`;
+    return rtnCltDetails;
 }
 // ===========================================================================================
 // ===========================================================================================
 async function all_data_load_dashboard () {
 
   try{
-      loading_shimmer();
+      loading_shimmer(); 
   } catch(error){console.log(error)}
   // -----------------------------------------------------------------------------------
   var tableData = document.getElementById('expenseTbody');
   try{
-      const response = await fetch(`${expense_API}/get`, {
+      const response = await fetch(`${expense_API}/get${rtnPaginationParameters()}`, {
           method: 'GET',
           headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${token}`
           }
       })
-      const res = await response.json();
+      const r2 = await response.json();
+      let res  = r2?.data;
+
+      console.log("alsdfjasf ;pasdf :- ",res);
+      setTotalDataCount(r2?.totalExpenses);
+
       var x = '';
       if(res.length>0){
           for (var i = 0; i < res.length; i++) {
-              var e = res[i]
+              var e = res[i];
+              console.log("lrlkasj as;broroororor:---===-=-= ",e)
               x += `<tr data-id=${e?._id}>
                           <td class="width-thirty"><input type="checkbox" class="checkbox_child" value="${e?._id || '-'}"></td>
                           <td>${e?.expenseName}</td>
@@ -99,8 +210,8 @@ async function all_data_load_dashboard () {
                               <div class="dropdown dropdown-action">
                                   <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                   <div class="dropdown-menu dropdown-menu-right">
-                                      <a onclick="handleClickToGenerateViewExpense('${e?._id}')" class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#view_data"><i class="fa-solid fa-eye m-r-5"></i>View</a>
                                       <a onclick="handleClickToGenerateEditExpense('${e?._id}')" class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_data"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
+                                      <a onclick="handleClickToGenerateViewExpense('${e?._id}')" class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#view_data"><i class="fa-solid fa-eye m-r-5"></i>View</a>
                                       <a class="dropdown-item" onclick="individual_delete('${e?._id}')" data-bs-toggle="modal" data-bs-target="#delete_data"><i class="fa-regular fa-trash-can m-r-5"></i> Delete </a>
                                   </div>
                               </div>
@@ -264,6 +375,7 @@ window.handleClickToGenerateEditExpense = async function handleClickToGenerateEd
     try{
         loading_shimmer();
     } catch(error){console.log(error)}
+    
     // -----------------------------------------------------------------------------------
     const responseData = await fetch(`${expense_API}/get/${id}`, {
         method: 'GET',
@@ -312,6 +424,10 @@ window.handleClickToGenerateEditExpense = async function handleClickToGenerateEd
 const editExpenseForm = document.getElementById('edit_expense_form');
 editExpenseForm.addEventListener('submit', async (event) => {
     event.preventDefault();
+    
+    try{
+        Array.from(document.querySelectorAll(".btn-close")).map(e=>e.click());
+    } catch(error){console.log(error)}
     if (!validateEditExpenseForm()) {
         return; // Prevent form submission if validation fails
     }

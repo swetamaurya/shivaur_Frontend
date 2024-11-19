@@ -25,7 +25,7 @@ async function dropDrownLoad() {
 
         console.log(r2)
         departments.innerHTML = '';
-        r2.forEach((e)=>{
+        r2?.data.forEach((e)=>{
             let s = document.createElement("option");
             s.value = e?._id;
             s.textContent = e?.departments;
@@ -45,7 +45,7 @@ async function dropDrownLoad() {
         console.log(r2)
     
         designations.innerHTML = '';
-        r2.forEach((e)=>{
+        r2?.data.forEach((e)=>{
             let s = document.createElement("option");
             s.value = e?._id;
             s.textContent = e?.designations;
@@ -175,7 +175,7 @@ async function rtn_degi(degi_id){
             'Authorization': `Bearer ${token}`,
         },
     });
-    let r2 = await r1.json();
+    let r2 = (await r1.json())?.data;
 
     for(let i = 0; i<r2.length; i++){
         if((r2[i]?._id)==degi_id){
@@ -191,7 +191,7 @@ async function rtn_deprt(deprt_id){
             'Authorization': `Bearer ${token}`,
         },
     });
-    let r2 = await r1.json();
+    let r2 = (await r1.json())?.data;
 
     for(let i = 0; i<r2.length; i++){
         if((r2[i]?._id)==deprt_id){

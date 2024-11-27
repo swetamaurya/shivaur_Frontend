@@ -1,19 +1,113 @@
 if (!localStorage.getItem("token")) {
+    localStorage();
     window.location.href = 'index.html';
 }
 // =================================================================================
 import { checkbox_function } from './multi_checkbox.js';
 import { status_popup, loading_shimmer, remove_loading_shimmer } from './globalFunctions1.js';
 import { formatDate, capitalizeFirstLetter } from './globalFunctions2.js'
-import { user_API, departments_API, desginations_API } from './apis.js';
+import { user_API, departments_API, desginations_API, global_search_API } from './apis.js';
 // -------------------------------------------------------------------------
 import {individual_delete, objects_data_handler_function} from './globalFunctionsDelete.js';
 window.individual_delete = individual_delete;
 // -------------------------------------------------------------------------
 import {} from "./globalFunctionsExport.js";
+import {rtnPaginationParameters, setTotalDataCount} from './globalFunctionPagination.js';
 // =================================================================================
 const token = localStorage.getItem('token');
 // =================================================================================
+// Function to handle search and update the same table
+
+// Get cached designation name by ID
+function getCachedDesignation(designationObj) {
+    if (!designationObj || !designationObj._id) return '';
+    const designation = cachedDesignations.find(d => d._id === designationObj._id);
+    return designation ? designation.designations : '';
+}
+async function handleSearch() {
+    const searchFields = ["userId", "name"]; // IDs of input fields
+    const searchType = "user"; // Type to pass to the backend
+    
+    const tableData = document.getElementById("tableData");
+    let x = ''; // Initialize rows content
+
+    try {
+        loading_shimmer(); // Display shimmer loader
+
+        // Construct query parameters for the search
+        const queryParams = new URLSearchParams({ type: searchType });
+        searchFields.forEach((field) => {
+            const value = document.getElementById(field)?.value?.trim();
+            if (value) queryParams.append(field, value);
+        });
+
+        // Send search request
+       
+        const response = await fetch(`${global_search_API}?${queryParams.toString()}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        const res = await response.json();
+
+        if (response.ok && res.data?.length > 0) {
+            // Generate table rows dynamically
+            const rows = res.data.map((user) => {
+                const designation = getCachedDesignation(user?.designations ? user.designations.designations : '-');
+                return `
+                <tr data-id="${user?._id || '-'}">
+                    <td><input type="checkbox" class="checkbox_child" value="${user?._id || '-'}"></td>
+                    <td>${capitalizeFirstLetter(user?.name) || '-'}</td>
+                    <td>${user?.userId || '-'}</td>
+                    <td>${user?.mobile || '-'}</td>
+                    <td>${capitalizeFirstLetter(designation) || '-'}</td>
+                    <td>${capitalizeFirstLetter(user?.status) || '-'}</td>
+                    <td>${formatDate(user?.joiningDate) || '-'}</td>
+                    <td>${formatDate(user?.DOB) || '-'}</td>
+                    <td class="">
+                        <div class="dropdown dropdown-action">
+                            <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="material-icons">more_vert</i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" href="userProfile.html?id=${user?._id}">
+                                    <i class="fa-regular fa-eye"></i> View
+                                </a>
+                                <a class="dropdown-item" onclick="handleClickOnEditEmployee('${user?._id || '-'}')" data-bs-toggle="modal" data-bs-target="#edit_data">
+                                    <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                                </a>
+                                <a class="dropdown-item" onclick="individual_delete('${user?._id || '-'}')" data-bs-toggle="modal" data-bs-target="#delete_data">
+                                    <i class="fa-regular fa-trash-can m-r-5"></i> Delete
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>`;
+            });
+
+            tableData.innerHTML = rows.join(''); // Insert rows into the table
+        } else {
+            x = `<tr><td colspan="9" class="text-center">No results found</td></tr>`;
+        }
+    } catch (error) {
+        console.error("Error during search:", error);
+        x = `<tr><td colspan="9" class="text-center">An error occurred during search</td></tr>`;
+    } finally {
+        if (x) tableData.innerHTML = x; // If no data, show message
+        checkbox_function(); // Reinitialize checkboxes
+        remove_loading_shimmer(); // Remove shimmer loader
+    }
+}
+
+// Attach the search function to the search button
+document.getElementById("searchButton").addEventListener("click", (e) => {
+    e.preventDefault();
+    handleSearch(); // Trigger search
+});
+
 
 
 let cachedDesignations = [];
@@ -29,7 +123,8 @@ async function fetchDesignationsAndDepartments() {
                     'Authorization': `Bearer ${token}`,
                 },
             });
-            cachedDesignations = await designationResponse.json();
+            let r = await designationResponse.json();
+            cachedDesignations = r?.data;
         } catch (error) {
             console.error('Error fetching designations:', error);
         }
@@ -44,7 +139,8 @@ async function fetchDesignationsAndDepartments() {
                     'Authorization': `Bearer ${token}`,
                 },
             });
-            cachedDepartments = await departmentResponse.json();
+            let r = await departmentResponse.json();
+            cachedDepartments = r?.data;
         } catch (error) {
             console.error('Error fetching departments:', error);
         }
@@ -65,7 +161,11 @@ function populateSelectOptions(elementId, options) {
     } catch (error){console.error(error)}
 }
 // -------------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------------
 // Load all employee data for the dashboard table
+
+
+
 async function all_data_load_dashboard() {
     try{
         loading_shimmer();
@@ -78,7 +178,7 @@ async function all_data_load_dashboard() {
     let rows;
 
     try {
-        const response = await fetch(`${user_API}/data/get?limit=10&page=1`, {
+        const response = await fetch(`${user_API}/data/get${rtnPaginationParameters()}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -87,6 +187,7 @@ async function all_data_load_dashboard() {
         });
 
         const res = await response.json();
+        setTotalDataCount(res?.totalEmployees);
         const users = res?.users?.employees;
 
         if (users && users.length>0) {
@@ -146,6 +247,7 @@ async function all_data_load_dashboard() {
     }
     // ----------------------------------------------------------------------------------------------------
     try{
+        document.dispatchEvent(new Event('removeDataFromEmployee'))
         remove_loading_shimmer();
     } catch(error){console.log(error)}
 
@@ -154,11 +256,7 @@ async function all_data_load_dashboard() {
     populateSelectOptions('designations', cachedDesignations);
 }
 
-// Get cached designation name by ID
-function getCachedDesignation(designationId) {
-    const designation = cachedDesignations.find(d => d._id === designationId);
-    return designation ? designation.designations : '';
-}
+
 
 // ==========================================================================================
 // Logic to check both email fields on blur for equality
@@ -194,7 +292,7 @@ document.getElementById('add_employee_form').addEventListener('submit', async fu
     } catch(error){console.log(error)}
     // ----------------------------------------------------------------------------------------------------
     const employeeData = {
-        name: document.getElementById('name').value,
+        name: document.getElementById('employee_name').value,
         email: document.getElementById('email').value,
         password: document.getElementById('password').value,
         status: document.getElementById('status').value,
@@ -240,6 +338,7 @@ document.getElementById('add_employee_form').addEventListener('submit', async fu
 window.handleClickOnEditEmployee = async function (employeeId) {
     await fetchDesignationsAndDepartments(); // Ensure designations and departments are loaded before editing
 
+    // Populate department and designation dropdowns
     populateSelectOptions("update-department", cachedDepartments);
     populateSelectOptions("update-designation", cachedDesignations);
 
@@ -253,26 +352,30 @@ window.handleClickOnEditEmployee = async function (employeeId) {
         });
 
         const employee = await response.json();
-        console.log(employee)
+        console.log(employee);
+
+        // Populate the form fields
         document.getElementById("update-name").value = employee.name || '';
         document.getElementById("update-id").value = employee._id || '';
         document.getElementById("update-mobile").value = employee.mobile || '';
         document.getElementById("update-joiningDate").value = employee.joiningDate || '';
         document.getElementById("update-status").value = employee.status || '';
-        document.getElementById("update-designation").value = employee.designations || '';
-        document.getElementById("update-department").value = employee.departments || '';
         document.getElementById("update-DOB").value = employee.DOB || '';
         document.getElementById("update-email").value = employee.email || '';
+
+        // Set department and designation dropdowns by their _id
+        document.getElementById("update-department").value = employee.departments?._id || ''; // Ensure you use the `_id`
+        document.getElementById("update-designation").value = employee.designations?._id || ''; // Ensure you use the `_id`
 
     } catch (error) {
         console.error('Error loading employee details:', error);
     }
 };
+
 // ----------------------------------------------------------------------------
 // Update employee details
 document.getElementById('employee-update-form').addEventListener('submit', async function(event) {
     event.preventDefault();
-
     if (!validatorEditEmployee()) {
         return;
     }
@@ -322,9 +425,8 @@ document.getElementById('employee-update-form').addEventListener('submit', async
 // =======================================================================================
 
 // On page load, load employee data for the dashboard
-window.onload = all_data_load_dashboard;
+all_data_load_dashboard();
 objects_data_handler_function(all_data_load_dashboard);
-
 
 // ==================================================================================================
 // ==================================================================================================
@@ -345,7 +447,7 @@ function validatorNewEmployee() {
     let isValid = true;
 
     // Get all field elements
-    const name = document.getElementById('name');
+    const name = document.getElementById('employee_name');
     const email = document.getElementById('email');
     const personalEmail = document.getElementById('personalEmail');
     const password = document.getElementById('password');
@@ -358,7 +460,7 @@ function validatorNewEmployee() {
     const designations = document.getElementById('designations');
 
     // Validation logic
-    if (!name.value.trim() || /\d/.test(name.value)) {
+    if (!employee_name.value.trim() || /\d/.test(employee_name.value)) {
         showError(name, 'Enter a valid name');
         isValid = false;
     }
@@ -503,3 +605,25 @@ function clearErrors() {
     const errorMessages = document.querySelectorAll('.text-danger.text-size.mohit_error_js_dynamic_validation');
     errorMessages.forEach((msg) => msg.remove());
 }
+
+// Remove data from employee list 
+document.addEventListener('removeDataFromEmployee',()=>{
+    let User_role = localStorage.getItem("User_role");
+
+    let addEmployeeButton = document.getElementById('add-employee-btn')
+    let employeeAction = document.getElementById('employee-action');
+    let employeeTable = document.getElementById('tableData').children
+    let downloadExcelFile = document.getElementById('download_excel_multiple_file');
+    let deleteButton = document.getElementById('delete_btn_multiple_file')
+    if(User_role == "Manager"){
+        addEmployeeButton.remove();
+        employeeAction.remove();
+        downloadExcelFile.remove();
+        deleteButton.remove();
+        for(let i=0; i<employeeTable.length; i++){
+            if (employeeTable[i] && employeeTable[i].cells && employeeTable[i].cells[7]) {
+                employeeTable[i].cells[8].remove();
+            } 
+        }
+    }
+})

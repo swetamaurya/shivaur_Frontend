@@ -43,13 +43,13 @@ async function showProjectDropdown(){
         },
       });
     const r2 = await r1.json();
-    cachedProject = r2?.projects;
+    cachedProject = r2?.data;
 
     console.log("bro :- ",cachedProject)
     
     const project_select_option = document.getElementById("project_select_option");
     console.log(r2?.projects);
-    r2?.projects.map((e) => {
+    cachedProject.map((e) => {
         let a1 = document.createElement("option");
         a1.value = e?._id || '-';
         a1.text = `${e?.projectName} (${e?.projectId})` || '-' ;
@@ -107,13 +107,13 @@ async function load_edit_data(){
         }
         const res = await responseData.json()
     
-        document.getElementById("project_select_option").value = res?.project;
-        document.getElementById("client_select_option").value = res?.client;
-        document.getElementById("email").value = res?.email;
+        document.getElementById("project_select_option").value = res?.project?._id;
+        document.getElementById("client_select_option").value = res?.client?._id;
+        document.getElementById("email").value = res?.client?.email;
         document.getElementById("estimateDate").value = res?.invoiceDate;
         document.getElementById("expiryDate").value = res?.dueDate;
         document.getElementById("taxType").value = res?.taxType;
-        document.getElementById("clientAddress").value = res?.clientAddress;
+        document.getElementById("clientAddress").value = res?.client?.address;
         document.getElementById("billingAddress").value = res?.billingAddress;
         document.getElementById("otherInfo").value = res?.otherInfo;
     

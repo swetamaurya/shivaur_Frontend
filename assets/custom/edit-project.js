@@ -351,6 +351,7 @@ window.addInvoiceTableRow = function addInvoiceTableRow(tag_id) {
 
 
 
+
 function global_price_calculate() {
   const discount_p = document.getElementById("discount_p");
   const discount_rs = document.getElementById("discount_rs");
@@ -360,7 +361,6 @@ function global_price_calculate() {
   const tax = document.getElementById("tax");
   price.addEventListener("input", f1);
   tax.addEventListener("input", my_calc_1);
-  
   discount_p.addEventListener("input", function () {
     if (Number(discount_p.value) > 0) {
       discount_rs.setAttribute("disabled", "disabled");
@@ -420,7 +420,7 @@ function global_price_calculate() {
     const ma1 = Number(
       Number(price.value) - Number(discount_rs.value) + Number(tax_rs.value)
     );
-    totalPrice.value = formatValue_of_2(ma1);
+    totalPrice.value = Math.floor(ma1);
   }
   function formatValue_of_2(value) {
     // Convert the value to a number
@@ -439,8 +439,6 @@ function global_price_calculate() {
     return num.toString();
   }
 }
-
-
 
 // ==========================================================================================
 // ==========================================================================================

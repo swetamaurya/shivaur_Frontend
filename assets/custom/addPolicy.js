@@ -14,7 +14,7 @@ try {
     console.log(res);
   
 const department = document.getElementById("department_select_option");
-res.forEach((departments) => {
+res?.data.forEach((departments) => {
     const option = document.createElement("option");
     option.value = departments._id;
     option.text = `${departments?.departments}`;

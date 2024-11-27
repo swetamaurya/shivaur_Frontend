@@ -88,9 +88,9 @@
                     <h5><b>Invoice to: </b><b id="clientName">Lucky Singh</b></h5>
 
                     <ul class="list-unstyled">
-                      <li id="clientAddr" style="width: 300px;"></li>
                       <li><b>Ph. No.: </b><span id="clientph"></span></li>
                       <li><b>Email Id: </b><span id="clientMail"></span></li>
+                      <li id="clientAddr" style="width: 300px;"></li>
                     </ul>
                   </div>
                 </div>
@@ -190,25 +190,8 @@
 
 
 </body>
-  <script>
-    $(document).ready(function () {
-        // Load header
-        $('#header-placeholder').load('header.html', function() {
-            // Fetch role from localStorage
-            var userRole = localStorage.getItem('User_role');
-            
-            // Inject role into the header-role span
-            if (userRole) {
-                $('#role').text(userRole);
-            } else {
-                $('#role').text('Guest');
-            }
-        });
-    
+  <script src="./assets/custom/sidebar.js"></script>
 
-         $('#sidebar-placeholder').load('sidebar.html');
-    });
-</script>
 
 <!-- Mirrored from  /html/template/estimate-view.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 16 Sep 2024 06:26:28 GMT -->
 

@@ -30,7 +30,7 @@ async function editDateLoad() {
       throw new Error();
     }
     let r2 = await response.json();
-    console.log(r2)
+    console.log("broror :-- ",r2)
 
     let a1 = document.getElementById("productName");
     let a2 = document.getElementById("category_select");
@@ -105,7 +105,7 @@ try {
   const categories = await response.json();
 
   // Populate the dropdown with categories
-  categories.forEach(category => {
+  categories?.categories?.forEach(category => {
     const option = document.createElement("option");
     option.value = category._id; // Set category ID as the value
     option.textContent = category.category; // Display category name

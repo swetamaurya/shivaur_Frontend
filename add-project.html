@@ -7,26 +7,25 @@
   data-sidebar-size="lg"
   data-sidebar-image="none"
 >
-  <!-- Mirrored from smarthr.dreamstechnologies.com/html/template/project-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 16 Sep 2024 06:21:43 GMT -->
-
+ 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Smarthr - Bootstrap Admin Template" />
+    <meta name="description" content="" />
     <meta
       name="keywords"
       content="admin, estimates, bootstrap, business, corporate, creative, management, minimal, modern, accounts, invoice, html5, responsive, CRM, Projects"
     />
     <meta
       name="author"
-      content="Dreamstechnologies - Bootstrap Admin Template"
+      content=" "
     />
-    <title>Projects - HRMS admin template</title>
+    <title>Projects </title>
 
     <link
       rel="shortcut icon"
       type="image/x-icon"
-      href="assets/img/fevicon.png"
+      href="assets/img/fevicons.png"
     />
 
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
@@ -125,8 +124,9 @@
                   </select>
                 </div>
               </div>
+<hr>
               
-              <div class="col-sm-6">
+              <div class="col-sm-4">
                 <div class="input-block mb-3">
                   <div class="d-flex align-items-center justify-content-between">
                     <label class="col-form-label">Start Date <span class="text-danger">*</span></label>
@@ -134,11 +134,20 @@
                   <input class="form-control" type="date" id="startDate" />
                 </div>
               </div>
-
-              <div class="col-sm-6">
+              <div class="col-sm-4">
                 <div class="input-block mb-3">
                   <div class="d-flex align-items-center justify-content-between">
-                    <label class="col-form-label">DeadLine <span class="text-danger">*</span></label>
+                    <label class="col-form-label">Complition Date <span class="text-danger">*</span></label>
+                  </div>
+                  <input class="form-control" type="date" id="complitionDate" />
+                </div>
+              </div>
+
+
+              <div class="col-sm-4">
+                <div class="input-block mb-3">
+                  <div class="d-flex align-items-center justify-content-between">
+                    <label class="col-form-label">DeadLine Date<span class="text-danger">*</span></label>
                   </div>
                   <input class="form-control" type="date" id="deadline" />
                 </div>
@@ -348,22 +357,6 @@
     ></script>
     <script type="module" src="./assets/custom/add-project.js"></script>
   </body>
-  <script>
-    $(document).ready(function () {
-      // Load header
-      $("#header-placeholder").load("header.html", function () {
-        // Fetch role from localStorage
-        var userRole = localStorage.getItem("User_role");
+  <script src="./assets/custom/sidebar.js"></script>
 
-        // Inject role into the header-role span
-        if (userRole) {
-          $("#role").text(userRole);
-        } else {
-          $("#role").text("Guest");
-        }
-      });
-
-      $("#sidebar-placeholder").load("sidebar.html");
-    });
-  </script>
 </html>

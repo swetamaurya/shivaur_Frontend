@@ -31,8 +31,7 @@ async function dropdownForAddTask(){
   const r2 = await r1.json();
   
   const project_select_option = document.getElementById("project_select_option");
-  console.log(r2?.projects)
-  r2?.projects.map((e) => {
+  r2?.data.map((e) => {
     let a1 = document.createElement("option");
     a1.value = e?._id || '-';
     a1.text = `${e?.projectName} (${e?.projectId})` || '-' ;

@@ -1,7 +1,8 @@
 if(!localStorage.getItem("token")) {
     window.location.href = 'index.html';
 }
-
+// -------------------------------------------------------------------------
+import {main_hidder_function} from './gloabl_hide.js';
 import { loading_shimmer, remove_loading_shimmer } from './globalFunctions1.js';
 import { formatDate, capitalizeFirstLetter } from './globalFunctions2.js'
 import {product_API} from './apis.js';
@@ -65,20 +66,19 @@ async function taskViewLoad() {
                                 <tr>
                                     <td>Quantity : </td>
                                     <td class="text-end">${r2?.quantity}</td>
-                                </tr>
-                                `;
+                                </tr>`;
             tbodyone.id = 'tbodyone';
             aa1.appendChild(tbodyone);
         } catch (error){console.log(error)}
     //   =========================================================================================
-        try{
-            let aa2 = document.getElementById("assigned-project-list");
-            (r2?.assignedTo).map((e)=>{
-                let li1 = document.createElement("li");
-                li1.innerText = ` - ${e?.name} (${e?.userId})`;
-                aa2.appendChild(li1);
-            });    
-        } catch(error){console.log(error)}
+            // try{
+            //     let aa2 = document.getElementById("assigned-project-list");
+            //     (r2?.assignedTo).map((e)=>{
+            //         let li1 = document.createElement("li");
+            //         li1.innerText = ` - ${e?.name} (${e?.userId})`;
+            //         aa2.appendChild(li1);
+            //     });    
+            // } catch(error){console.log(error)}
         // =========================================================================================
         try{
             let rd_doc = r2?.images;
@@ -114,6 +114,9 @@ async function taskViewLoad() {
     try{
         remove_loading_shimmer();
     } catch(error){console.log(error)}
+    try{
+        main_hidder_function();
+    } catch (error){console.log(error)}
 }
 
 

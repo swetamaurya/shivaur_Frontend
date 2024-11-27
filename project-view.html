@@ -291,24 +291,8 @@
     ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.8.0/html2pdf.bundle.min.js" integrity="sha512-w3u9q/DeneCSwUDjhiMNibTRh/1i/gScBVp2imNVAMCt6cUHIw6xzhzcPFIaL3Q1EbI2l+nu17q2aLJJLo4ZYg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   </body>
-  <script>
-    $(document).ready(function () {
-      // Load header
-      $("#header-placeholder").load("header.html", function () {
-        // Fetch role from localStorage
-        var userRole = localStorage.getItem("User_role");
+  <script src="./assets/custom/sidebar.js"></script>
 
-        // Inject role into the header-role span
-        if (userRole) {
-          $("#role").text(userRole);
-        } else {
-          $("#role").text("Guest");
-        }
-      });
-
-      $("#sidebar-placeholder").load("sidebar.html");
-    });
-  </script>
 
   <script>
     function viewProjectDetails(id) {

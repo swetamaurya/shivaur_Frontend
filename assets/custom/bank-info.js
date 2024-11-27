@@ -30,7 +30,7 @@ window.onload = async () => {
       res.users.employees.forEach((e) => {
         let option = document.createElement("option");
         option.value = e._id;
-        option.textContent = e.name;
+        option.textContent = `${e.name} (${e?.userId})`;
         option.dataset.email = e.email; // Store email in data attribute
         empSelectOption.appendChild(option);
       });

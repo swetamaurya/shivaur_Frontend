@@ -84,12 +84,6 @@
                     Login
                   </button>
                 </div>
-                <div class="account-footer">
-                  <p>
-                    Don't have an account yet?
-                    <a href="register.html">Register</a>
-                  </p>
-                </div>
               </form>
               <div id="response" style="color: red;"></div>  
             </div>
@@ -120,25 +114,8 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   </body> 
-  <script>
-    $(document).ready(function () {
-        // Load header
-        $('#header-placeholder').load('header.html', function() {
-            // Fetch role from localStorage
-            var userRole = localStorage.getItem('User_role');
-            
-            // Inject role into the header-role span
-            if (userRole) {
-                $('#role').text(userRole);
-            } else {
-                $('#role').text('Guest');
-            }
-        });
-    
+  <!-- <script src="./assets/custom/sidebar.js"></script> -->
 
-         $('#sidebar-placeholder').load('sidebar.html');
-    });
-</script>
  
    
 </html>

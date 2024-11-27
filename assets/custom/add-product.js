@@ -31,8 +31,10 @@ try {
 
   const categories = await response.json();
 
+  // console.log(categories)
+
   // Populate the dropdown with categories
-  categories.forEach(category => {
+  categories?.categories?.forEach(category => {
     const option = document.createElement("option");
     option.value = category._id; // Set category ID as the value
     option.textContent = category.category; // Display category name
@@ -146,10 +148,10 @@ function validateProductForm() {
     isValid = false;
   }
 
-  if (!supplier.value.trim()) {
-    showError(supplier, "Please enter a supplier name");
-    isValid = false;
-  }
+  // if (!supplier.value.trim()) {
+  //   showError(supplier, "Please enter a supplier name");
+  //   isValid = false;
+  // }
 
   if (!purchaseDate.value.trim()) {
     showError(purchaseDate, "Please select a purchase date");

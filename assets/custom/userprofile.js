@@ -5,7 +5,7 @@ if(!localStorage.getItem("token")) {
 
 import { status_popup, loading_shimmer, remove_loading_shimmer } from './globalFunctions1.js';
 import { formatDate, capitalizeFirstLetter } from './globalFunctions2.js'
-import {user_API,departments_API,desginations_API} from './apis.js';
+import {user_API,departments_API,desginations_API,resignation_API} from './apis.js';
 
 const token = localStorage.getItem('token');
 let _id_not_use_again;
@@ -25,7 +25,7 @@ async function dropDrownLoad() {
 
         console.log(r2)
         departments.innerHTML = '';
-        r2.forEach((e)=>{
+        r2?.data.forEach((e)=>{
             let s = document.createElement("option");
             s.value = e?._id;
             s.textContent = e?.departments;
@@ -45,7 +45,7 @@ async function dropDrownLoad() {
         console.log(r2)
     
         designations.innerHTML = '';
-        r2.forEach((e)=>{
+        r2?.data.forEach((e)=>{
             let s = document.createElement("option");
             s.value = e?._id;
             s.textContent = e?.designations;
@@ -95,8 +95,8 @@ async function all_data_load_dashboard(){
                     document.getElementById("view-user-id").innerText = a1?.userId || '-';
                     document.getElementById("view-status").innerText = a1?.status || '-';
                     document.getElementById("view-roles").innerText = a1?.roles || '-';
-                    document.getElementById("view-department").innerText = await rtn_deprt(a1?.departments) || '-';
-                    document.getElementById("view-designation").innerText = await rtn_degi(a1?.designations) || '-';
+                    document.getElementById("view-department").innerText = a1?.departments?.departments || '-';
+                    document.getElementById("view-designation").innerText = a1?.designations?.designations || '-';
                     document.getElementById("view-address").innerText = a1?.address || '-';
                 } catch(error){console.log(error)}
                 try{
@@ -108,9 +108,9 @@ async function all_data_load_dashboard(){
                     document.getElementById("edit-mobile").value = a1?.mobile || '-';
                     document.getElementById("edit-roles").value = a1?.roles || '-';
                     document.getElementById("edit-email-id").value = a1?.email || '-';
-                    document.getElementById("edit-department").value = a1?.departments || '-';
+                    document.getElementById("edit-department").value = a1?.departments?._id || '-';
                     document.getElementById("edit-dob").value = a1?.DOB || '-';
-                    document.getElementById("edit-designation").value = a1?.designations || '-';
+                    document.getElementById("edit-designation").value = a1?.designations?._id || '-';
                     document.getElementById("edit-gender").value = a1?.gender || '-';
                     document.getElementById("edit-address").value = a1?.address || '-';
                 } catch(error){console.log(error)}
@@ -165,39 +165,6 @@ async function all_data_load_dashboard(){
     try{
         remove_loading_shimmer();
     } catch(error){console.log(error)}
-}
-
-async function rtn_degi(degi_id){
-    let r1 = await fetch(`${desginations_API}/get`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-        },
-    });
-    let r2 = await r1.json();
-
-    for(let i = 0; i<r2.length; i++){
-        if((r2[i]?._id)==degi_id){
-            return r2[i]?.designations;
-        }
-    }
-}
-async function rtn_deprt(deprt_id){
-    let r1 = await fetch(`${departments_API}/get`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-        },
-    });
-    let r2 = await r1.json();
-
-    for(let i = 0; i<r2.length; i++){
-        if((r2[i]?._id)==deprt_id){
-            return r2[i]?.departments;
-        }
-    }
 }
 
 // =============================================================================================
@@ -506,3 +473,93 @@ function clearErrors() {
     const errorMessages = document.querySelectorAll('.text-danger.text-size.mohit_error_js_dynamic_validation');
     errorMessages.forEach((msg) => msg.remove());
 }
+// Populate the resignation form with the current user's profile information
+async function populateResignationForm() {
+    try {
+        const userId = new URLSearchParams(window.location.search).get('id'); // Extract user ID from the query parameter
+        if (!userId) throw new Error("User ID not found in the URL.");
+
+        // Fetch the user profile details
+        const response = await fetch(`${user_API}/get/${userId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+
+        const userData = await response.json();
+        if (!response.ok || !userData) throw new Error("Failed to fetch user data.");
+
+        // Pre-fill the resignation form with the user details
+        const employeeNameField = document.getElementById('add_employee_name');
+        const emailField = document.getElementById('add_email');
+        const employeeIdField = document.getElementById('add_employee_id');
+
+        // Populate the fields with the current user's data
+        employeeNameField.value = userData.name || ''; // Set the employee name
+        employeeNameField.disabled = true; // Disable the field to prevent changes
+        emailField.value = userData.email || ''; // Set the email field
+        emailField.disabled = true; // Disable the email field to prevent changes
+        employeeIdField.value = userData._id || ''; // Set the employee ID (hidden field)
+    } catch (error) {
+        console.error("Error populating resignation form:", error);
+    }
+}
+
+// Add Resignation Form Submission
+document.getElementById('add-resignation-form').addEventListener('submit', async function (event) {
+    event.preventDefault(); // Prevent default form submission
+    const submitButton = event.target.querySelector("button[type='submit']");
+    submitButton.disabled = true; // Disable the submit button to prevent multiple submissions
+
+    try {
+        // Close modal (if any) and show loading shimmer
+        document.querySelectorAll(".btn-close").forEach(e => e.click());
+        loading_shimmer();
+
+        // Gather input values
+        const employeeId = document.getElementById('add_employee_id').value.trim();
+        const email = document.getElementById('add_email').value.trim();
+        const noticeDate = document.getElementById('add_noticeDate').value;
+        const resignationDate = document.getElementById('add_resignationDate').value;
+        const reason = document.getElementById('add_reason').value.trim();
+
+        // Validate required fields
+        if (!employeeId || !email || !noticeDate || !resignationDate || !reason) {
+            throw new Error("Please fill in all the required fields.");
+        }
+
+        // Make API call to submit the resignation
+        const response = await fetch(`${resignation_API}/post`, {
+            method: 'POST',
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ employeeId, email, noticeDate, resignationDate, reason }),
+        });
+
+        // Handle success or failure
+        const success = response.ok;
+        status_popup(success ? "Resignation added <br> Successfully" : "Please try again later", success);
+
+        if (success) {
+            // Reload the resignation list after successful addition
+            populateResignationForm();
+        }
+    } catch (error) {
+        // Log and display error to the user
+        console.error('Error adding resignation:', error);
+        status_popup(error.message || "Please try <br> again later", false);
+    } finally {
+        // Re-enable submit button and remove shimmer
+        submitButton.disabled = false;
+        remove_loading_shimmer();
+    }
+});
+
+// Call the populate function on page load
+populateResignationForm();
+
+

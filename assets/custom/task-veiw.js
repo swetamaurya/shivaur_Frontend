@@ -3,7 +3,9 @@ if (!localStorage.getItem("token")) {
 }
 // =================================================================================
 import { loading_shimmer, remove_loading_shimmer } from './globalFunctions1.js';
+import {main_hidder_function} from './gloabl_hide.js';
 import { formatDate, capitalizeFirstLetter } from './globalFunctions2.js'
+// -------------------------------------------------------------------------
 import { task_API } from './apis.js';
 // =================================================================================
 const token = localStorage.getItem('token');
@@ -102,7 +104,11 @@ async function taskViewLoad() {
     try{
         remove_loading_shimmer();
     } catch(error){console.log(error)}
+    try{
+        main_hidder_function();
+    } catch (error){console.log(error)}
 }
+
 
 
 

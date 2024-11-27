@@ -9,6 +9,129 @@ const token = localStorage.getItem('token');
 // =======================================================
 // =======================================================
 // =======================================================
+const User_role = localStorage.getItem('User_role');
+
+if(User_role=="Employee"){
+  async function editTask(){
+    try{
+      let _id_param = new URLSearchParams(window.location.search).get("id");  
+      const r1 = await fetch(`${task_API}/get/${_id_param}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if(!r1.ok){
+        throw new Error();
+      }
+      
+      const r2 = await r1.json();
+      console.log(r2)
+  
+      let a1 = document.getElementById("startDate");
+      let a2 = document.getElementById("status");
+      let a3 = document.getElementById("task-title");
+      let a4 = document.getElementById("description");
+      let a5 = document.getElementById("_id_hidden");
+      let a6 = document.getElementById("assigned_by_select_option");
+      let a7 = document.getElementById("project_select_option");
+      let a9 = document.getElementById("selectedAssignees_my_shivaur_mohit");
+      
+      const assignBy = document.createElement('option')
+      assignBy.value = r2?.assignedBy._id;
+      assignBy.innerText = r2?.assignedBy.name;
+      a6.appendChild(assignBy)
+
+      let a8 = document.getElementById('asignee_data');
+      const project = document.createElement('option')
+      project.value=r2.project._id;
+      project.innerText=r2.project.projectName
+      a7.appendChild(project)
+      
+      a1.value = r2?.startDate || '-';
+      a2.value = r2?.status || '-';
+      a3.value = r2?.title || '-';
+      a4.value = r2?.taskDescription || '-';
+      a5.value = r2?._id || '-';
+      // a6.value = r2?.assignedBy?._id || '-';
+      a7.value = r2?.project?._id || '-';
+      a8.innerText = r2?.assignedTo[0]?.name || '-';
+      a9.innerText = r2?.assignedTo[0]?._id || '-';
+      
+    } catch(error){
+      window.location.href = 'tasks.html';
+    }
+  }
+  editTask();
+  // Start 
+
+  const update_task_form = document.getElementById('update_task_form');
+update_task_form.addEventListener('submit',async(event)=>{
+  event.preventDefault();
+  try{
+      loading_shimmer();
+  } catch(error){console.log(error)}
+  // -----------------------------------------------------------------------------------
+
+  let startDate = document.getElementById('startDate').value;
+  let status = document.getElementById('status').value;
+  let assignedBy = document.getElementById('assigned_by_select_option').value;
+  let title = document.getElementById('task-title').value;
+  let project = document.getElementById('project_select_option').value;
+  let taskDescription = document.getElementById('description').value;
+  let _id_hidden = document.getElementById("_id_hidden").value;
+
+  let formData = new FormData();
+
+  Array.from(document.getElementById("selectedAssignees_my_shivaur_mohit").children).forEach((e)=>{
+    formData.append("assignedTo",e.getAttribute('value'));
+  });
+  
+  let files = document.getElementById('file').files;
+  for (const file of files) {
+    formData.append("file", file);
+  }
+
+  formData.append("_id",_id_hidden);
+  formData.append("startDate", startDate);
+  formData.append("status", status);
+  formData.append("assignedBy", assignedBy);
+  formData.append("title", title);
+  formData.append("project", project);
+  formData.append("taskDescription", taskDescription);
+
+  try {
+    const response = await fetch(`${task_API}/update`, {
+      method: "POST",
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      body: formData
+    });
+
+    const c1 = (response.ok);
+    try{
+      status_popup( ((c1) ? "Data Updated <br> Successfully" : "Please try <br> again later"), (c1) );
+      setTimeout(function(){
+        window.location.href = 'tasks.html'; 
+      },(Number(document.getElementById("b1b1").innerText)*1000));
+    } catch (error){
+      status_popup("Please try <br> again later", false);
+    }
+  } catch (error) {
+    console.log(error)
+    status_popup("Please try <br> again later", false);
+  }
+  // ----------------------------------------------------------------------------------------------------
+  try{
+    remove_loading_shimmer();
+} catch(error){console.log(error)}
+});
+
+  // End 
+}
+else{
 
 async function dropdownForAddTask(){
   // =========================================================
@@ -20,9 +143,8 @@ async function dropdownForAddTask(){
     },
   });
   const r2 = await r1.json();
-  
   const project_select_option = document.getElementById("project_select_option");
-  r2?.projects.map((e) => {
+  r2?.data.map((e) => {
     let a1 = document.createElement("option");
     a1.value = e?._id || '-';
     a1.text = `${e?.projectName} (${e?.projectId})` || '-' ;
@@ -50,7 +172,6 @@ async function dropdownForAddTask(){
   });
 }
 // ==================================================================================================================
-
 async function editTaskDataUpdate() {
   try{
       loading_shimmer();
@@ -218,32 +339,33 @@ update_task_form.addEventListener('submit',async(event)=>{
 } catch(error){console.log(error)}
 });
 
+
 // ==========================================================================================
 // ==========================================================================================
 
 function assignee_drop_down_checkbox(){
-    
+  
   const dropdownContent_my_shivaur_mohit = document.getElementById("dropdownContent_my_shivaur_mohit");
   const selectedAssignees_my_shivaur_mohit = document.getElementById("selectedAssignees_my_shivaur_mohit");
   const checkboxes_my_shivaur_mohit = document.querySelectorAll(".assignee-checkbox_my_shivaur_mohit");
-
+  
   // Function to toggle dropdown visibility
   window.toggleDropdown_my_shivaur_mohit = function toggleDropdown_my_shivaur_mohit() {
     dropdownContent_my_shivaur_mohit.classList.toggle("show_my_shivaur_mohit");
   }
-
+  
   // Close dropdown if clicked outside
   window.addEventListener("click", function (event) {
     if (!event.target.matches('.dropdown-btn_my_shivaur_mohit')) {
       dropdownContent_my_shivaur_mohit.classList.remove("show_my_shivaur_mohit");
     }
   });
-
+  
   // Function to update selected assignees display
   function updateSelectedAssignees_my_shivaur_mohit() {
     // Clear the display area
     selectedAssignees_my_shivaur_mohit.innerHTML = "";
-
+    
     // Loop through each checkbox and add selected ones to display
     checkboxes_my_shivaur_mohit.forEach((checkbox) => {
       if (checkbox.checked) {
@@ -256,7 +378,7 @@ function assignee_drop_down_checkbox(){
       }
     });
   }
-
+  
   // Attach event listeners to all checkboxes for selection
   checkboxes_my_shivaur_mohit.forEach((checkbox) => {
     checkbox.addEventListener("change", updateSelectedAssignees_my_shivaur_mohit);
@@ -282,7 +404,7 @@ function validateTaskForm() {
   const assignedBy = document.getElementById("assigned_by_select_option");
   const status = document.getElementById("status");
   const description = document.getElementById("description");
-
+  
   // Task Title Validation
   if (!taskTitle.value.trim()) {
     showError(taskTitle, "Please enter a valid task title");
@@ -306,7 +428,7 @@ function validateTaskForm() {
     showError(assignedBy, "Please select the person who assigned the task");
     isValid = false;
   }
-
+  
   // Status Validation
   if (!status.value.trim()) {
     showError(status, "Please select a status");
@@ -370,4 +492,5 @@ function showError(element, message) {
 function clearErrors() {
   const errorMessages = document.querySelectorAll('.text-danger.text-size.mohit_error_js_dynamic_validation');
   errorMessages.forEach((msg) => msg.remove());
+}
 }

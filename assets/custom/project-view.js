@@ -8,7 +8,14 @@ import { project_API } from './apis.js';
 // =================================================================================
 const token = localStorage.getItem('token');
 // =================================================================================
+try{  
+  let edit_project_btn = document.getElementById('edit_project_btn')
 
+  const User_role = localStorage.getItem('User_role');
+    if(User_role == "Employee"){
+      edit_project_btn.remove()
+    }
+} catch(error){console.log(error)}
 
 window.onload = async () => {
   try{

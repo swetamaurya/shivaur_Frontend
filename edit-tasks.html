@@ -100,7 +100,7 @@
                                   <div class="col-sm-6 ">
                                     
                                     <div class="dropdown_my_shivaur_mohit">
-                                      <div class="dropdown-btn_my_shivaur_mohit" onclick="toggleDropdown_my_shivaur_mohit()">Select Assignees</div>
+                                      <div id="asignee_data" class="dropdown-btn_my_shivaur_mohit" onclick="toggleDropdown_my_shivaur_mohit()">Select Assignees</div>
                                       <div class="dropdown-content_my_shivaur_mohit" id="dropdownContent_my_shivaur_mohit">
                                         <!-- Checkboxes for single-click selection -->
                                       </div>
@@ -144,6 +144,7 @@
                                 <div class="d-flex align-items-center justify-content-between">
                                   <label class="col-form-label"  >Status <span class="text-danger">*</span></label>
                                 </div>
+                          
                                 <select class="form-control" id="status">
                                   <option value="" disabled selected>Select Status</option>
                                   <option value="Active">Active</option>
@@ -268,22 +269,6 @@
     ></script>
     <script type="module" src="./assets/custom/edit-tasks.js"></script>
   </body>
-  <script>
-    $(document).ready(function () {
-      // Load header
-      $("#header-placeholder").load("header.html", function () {
-        // Fetch role from localStorage
-        var userRole = localStorage.getItem("User_role");
+  <script src="./assets/custom/sidebar.js"></script>
 
-        // Inject role into the header-role span
-        if (userRole) {
-          $("#role").text(userRole);
-        } else {
-          $("#role").text("Guest");
-        }
-      });
-
-      $("#sidebar-placeholder").load("sidebar.html");
-    });
-  </script>
 </html>

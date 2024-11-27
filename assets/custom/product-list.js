@@ -10,9 +10,14 @@ import { product_API } from './apis.js';
 import {individual_delete, objects_data_handler_function} from './globalFunctionsDelete.js';
 window.individual_delete = individual_delete;
 import { global_search_API } from './apis.js'; // Define your global search API URL
+<<<<<<< HEAD
 // -------------------------------------------------------------------------
 import {main_hidder_function} from './gloabl_hide.js';
 import {rtnPaginationParameters, setTotalDataCount} from './globalFunctionPagination.js';
+=======
+import {rtnPaginationParameters, setTotalDataCount} from './globalFunctionPagination.js';
+
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 import {} from "./globalFunctionsExport.js";
 // =================================================================================
 const token = localStorage.getItem('token');
@@ -68,8 +73,13 @@ async function handleSearch() {
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
                   <a href="product-view.html?id=${products[i]?._id}" class="dropdown-item"><i class="fa-regular fa-eye"></i> View</a>
+<<<<<<< HEAD
                   <a href="edit-product.html?id=${products[i]?._id}" class="dropdown-item  hr_restriction employee_restriction"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
                   <a class="dropdown-item  hr_restriction employee_restriction" onclick="individual_delete('${products[i]?._id}')" data-bs-toggle="modal" data-bs-target="#delete_data"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
+=======
+                  <a href="edit-product.html?id=${products[i]?._id}" class="dropdown-item"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
+                  <a class="dropdown-item" onclick="individual_delete('${products[i]?._id}')" data-bs-toggle="modal" data-bs-target="#delete_data"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
                 </div>
               </div>
             </td>
@@ -88,10 +98,13 @@ async function handleSearch() {
     checkbox_function(); // Reinitialize checkboxes
     remove_loading_shimmer(); // Remove shimmer
   }
+<<<<<<< HEAD
   try{
       main_hidder_function();
   } catch (error){console.log(error)}
   
+=======
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 }
 
 // Attach the search function to the search button

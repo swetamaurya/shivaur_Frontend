@@ -5,8 +5,12 @@ if (!localStorage.getItem("token")) {
 import { user_API } from './apis.js';
 import { checkbox_function } from './multi_checkbox.js';
 import { status_popup, loading_shimmer, remove_loading_shimmer } from './globalFunctions1.js';
+<<<<<<< HEAD
 // -------------------------------------------------------------------------
 import {main_hidder_function} from './gloabl_hide.js';
+=======
+import { user_API } from './apis.js';
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 // import { globalSearch } from './globalSearch.js'; // API URL
 import { global_search_API } from './apis.js'; // Define your global search API URL
 const token = localStorage.getItem('token');
@@ -62,8 +66,13 @@ async function handleSearch() {
                                 <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <a class="dropdown-item" onclick="handleClickOnViewClient('${e?._id}')"  data-bs-toggle="modal" data-bs-target="#view_data"><i class="fa-regular fa-eye m-r-5"></i> View</a>
+<<<<<<< HEAD
                                     <a class="dropdown-item hr_restriction employee_restriction" onclick="handleClickOnEditClient('${e?._id}')" data-bs-toggle="modal" data-bs-target="#edit_data"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
                                     <a class="dropdown-item hr_restriction employee_restriction" onclick="individual_delete('${e?._id}')" href="#" data-bs-toggle="modal" data-bs-target="#delete_data"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
+=======
+                                    <a class="dropdown-item" onclick="handleClickOnEditClient('${e?._id}')" data-bs-toggle="modal" data-bs-target="#edit_data"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
+                                    <a class="dropdown-item" onclick="individual_delete('${e?._id}')" href="#" data-bs-toggle="modal" data-bs-target="#delete_data"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
                                 </div>
                             </div>
                         </td>
@@ -80,9 +89,12 @@ async function handleSearch() {
         checkbox_function(); // Reinitialize checkboxes
         remove_loading_shimmer();
     }
+<<<<<<< HEAD
     try{
         main_hidder_function();
     } catch (error){console.log(error)}
+=======
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 }
 
 

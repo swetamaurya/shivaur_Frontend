@@ -167,6 +167,42 @@ async function all_data_load_dashboard(){
     } catch(error){console.log(error)}
 }
 
+<<<<<<< HEAD
+=======
+async function rtn_degi(degi_id){
+    let r1 = await fetch(`${desginations_API}/get`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+    });
+    let r2 = (await r1.json())?.data;
+
+    for(let i = 0; i<r2.length; i++){
+        if((r2[i]?._id)==degi_id){
+            return r2[i]?.designations;
+        }
+    }
+}
+async function rtn_deprt(deprt_id){
+    let r1 = await fetch(`${departments_API}/get`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+    });
+    let r2 = (await r1.json())?.data;
+
+    for(let i = 0; i<r2.length; i++){
+        if((r2[i]?._id)==deprt_id){
+            return r2[i]?.departments;
+        }
+    }
+}
+
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 // =============================================================================================
 // all employee load, on window load
 all_data_load_dashboard();

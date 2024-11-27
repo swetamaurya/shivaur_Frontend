@@ -6,8 +6,15 @@ if (!localStorage.getItem("token")) {
 import { checkbox_function } from './multi_checkbox.js';
 import { loading_shimmer, remove_loading_shimmer } from './globalFunctions1.js';
 import { formatDate, capitalizeFirstLetter } from './globalFunctions2.js'
+<<<<<<< HEAD
 import { project_API, global_search_API } from './apis.js';
 import {rtnPaginationParameters, setTotalDataCount} from './globalFunctionPagination.js';
+=======
+import { project_API } from './apis.js';
+import { global_search_API } from './apis.js'; // Define your global search API URL
+import {rtnPaginationParameters, setTotalDataCount} from './globalFunctionPagination.js';
+
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 // -------------------------------------------------------------------------
 import {individual_delete, objects_data_handler_function} from './globalFunctionsDelete.js';
 window.individual_delete = individual_delete;
@@ -66,8 +73,13 @@ async function handleSearch() {
                                 <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <a href="project-view.html?id=${e?._id}" class="dropdown-item"><i class="fa-regular fa-eye"></i> View</a>
+<<<<<<< HEAD
                                     <a href="edit-project.html?id=${e?._id}" class="dropdown-item hr_restriction employee_restriction"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
                                     <a class="dropdown-item hr_restriction employee_restriction" onclick="individual_delete('${e?._id}')" href="#" data-bs-toggle="modal" data-bs-target="#delete_data"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
+=======
+                                    <a href="edit-project.html?id=${e?._id}" class="dropdown-item"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
+                                    <a class="dropdown-item" onclick="individual_delete('${e?._id}')" href="#" data-bs-toggle="modal" data-bs-target="#delete_data"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
                                 </div>
                             </div>
                         </td>
@@ -138,9 +150,15 @@ async function all_data_load_dashboard(){
                             <div class="dropdown dropdown-action">
                                 <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                 <div class="dropdown-menu dropdown-menu-right">
+<<<<<<< HEAD
                                     <a  href="project-view.html?id=${e?._id}" class="dropdown-item projectViewBtn employee_restriction" ><i class="fa-regular fa-eye"></i> View</a>
                                     <a  href="edit-project.html?id=${e?._id}" class="dropdown-item projectEditBtn hr_restriction" ><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
                                     <a class="dropdown-item projectDeleteBtn hr_restriction employee_restriction" onclick="individual_delete('${e?._id}')" href="#" data-bs-toggle="modal" data-bs-target="#delete_data"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
+=======
+                                    <a  href="project-view.html?id=${e?._id}" class="dropdown-item projectViewBtn" ><i class="fa-regular fa-eye"></i> View</a>
+                                    <a  href="edit-project.html?id=${e?._id}" class="dropdown-item projectEditBtn" ><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
+                                    <a class="dropdown-item projectDeleteBtn" onclick="individual_delete('${e?._id}')" href="#" data-bs-toggle="modal" data-bs-target="#delete_data"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
                                 </div>
                             </div>
                         </td>
@@ -169,6 +187,7 @@ async function all_data_load_dashboard(){
     try{
         checkbox_function();
         remove_loading_shimmer();
+        document.dispatchEvent(new Event('removeDataFromProject'))
     } catch(error){console.log(error)}
     try{
         main_hidder_function();
@@ -179,4 +198,53 @@ async function all_data_load_dashboard(){
 all_data_load_dashboard();
 objects_data_handler_function(all_data_load_dashboard);
 
+<<<<<<< HEAD
+=======
+// Remove Data When Employee Logged In
+document.addEventListener('removeDataFromProject',()=>{
+    let addProjectButton = document.getElementById('add-project-btn')
+    let projectAction = document.getElementById('project-action');
+    let projectTable = document.getElementById('projectData').children
+    let downloadExcelFile = document.getElementById('download_excel_multiple_file');
+    let deleteButton = document.getElementById('delete_btn_multiple_file')
+    if(User_role == "Employee"){
+        addProjectButton.remove();
+        // projectAction.remove();
+        downloadExcelFile.remove();
+        deleteButton.remove();
+        try {
+            ['projectEditBtn','projectDeleteBtn'].map
+            (f=>document.querySelectorAll(`.${f}`).forEach(e=> {
+                console.log('These are my classes----->>>>> ',f)
+                e.style.display = 'none'
+            }));
+            Array.from(document.querySelectorAll('.projectViewBtn'),(e=>{e.style.display='inline-block'}))
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    else if(User_role == "HR"){
+        addProjectButton.remove();
+        downloadExcelFile.remove();
+        deleteButton.remove();
+        try {
+            ['projectViewBtn','projectDeleteBtn'].map
+            (f=>document.querySelectorAll(`.${f}`).forEach(e=> {
+                console.log('These are my classes----->>>>> ',f)
+                e.style.display = 'none'
+            }));
+            Array.from(document.querySelectorAll('.projectEditBtn'),(e=>{e.style.display='inline-block'}))
+        } catch (error) {
+            console.log(error)
+        }
+    }
+})
+
+
+
+
+
+
+
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 

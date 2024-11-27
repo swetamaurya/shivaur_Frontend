@@ -66,13 +66,21 @@ async function handleSearch() {
                 <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
                   aria-expanded="false"><i class="material-icons">more_vert</i></a>
                 <div class="dropdown-menu dropdown-menu-right">
+<<<<<<< HEAD
                   <a class="dropdown-item  hr_restriction" href="edit-invoice.html?id=${e._id}">
+=======
+                  <a class="dropdown-item" href="edit-invoice.html?id=${e._id}">
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
                     <i class="fa-solid fa-pencil m-r-5"></i> Edit
                   </a>
                   <a class="dropdown-item" href="invoice-view.html?id=${e._id}">
                     <i class="fa-solid fa-eye m-r-5"></i> View
                   </a>
+<<<<<<< HEAD
                   <a class="dropdown-item  hr_restriction" onclick="individual_delete('${e._id}')" data-bs-toggle="modal" data-bs-target="#delete_data">
+=======
+                  <a class="dropdown-item" onclick="individual_delete('${e._id}')" data-bs-toggle="modal" data-bs-target="#delete_data">
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
                     <i class="fa-regular fa-trash-can m-r-5"></i> Delete
                   </a>
                 </div>
@@ -94,9 +102,12 @@ async function handleSearch() {
     checkbox_function(); // Reinitialize checkboxes
     remove_loading_shimmer(); // Remove loading shimmer
   }
+<<<<<<< HEAD
   try{
       main_hidder_function();
   } catch (error){console.log(error)}
+=======
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 }
 
 
@@ -170,12 +181,20 @@ async function all_data_load_dashboard() {
                 <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
                   aria-expanded="false"><i class="material-icons">more_vert</i></a>
                 <div class="dropdown-menu dropdown-menu-right">
+<<<<<<< HEAD
                   <a class="dropdown-item hr_restriction" href="edit-invoice.html?id=${e._id}"><i class="fa-solid fa-pencil m-r-5"></i>
+=======
+                  <a class="dropdown-item" href="edit-invoice.html?id=${e._id}"><i class="fa-solid fa-pencil m-r-5"></i>
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
                     Edit</a>
                   <a class="dropdown-item" href="invoice-view.html?id=${e._id}"><i class="fa-solid fa-eye m-r-5"></i>
                     View</a>
 
+<<<<<<< HEAD
                   <a class="dropdown-item hr_restriction" onclick="individual_delete('${e?._id}')" data-bs-toggle="modal" data-bs-target="#delete_data">
+=======
+                  <a class="dropdown-item" onclick="individual_delete('${e?._id}')" data-bs-toggle="modal" data-bs-target="#delete_data">
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
                     <i class="fa-regular fa-trash-can m-r-5"></i> Delete
                 </a>
                 </div>
@@ -189,9 +208,12 @@ async function all_data_load_dashboard() {
   try{
     remove_loading_shimmer();
   } catch(error){console.log(error)}
+<<<<<<< HEAD
   try{
       main_hidder_function();
   } catch (error){console.log(error)}
+=======
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 }
 
 all_data_load_dashboard();

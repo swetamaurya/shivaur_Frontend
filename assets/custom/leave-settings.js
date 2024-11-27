@@ -43,7 +43,11 @@ async function all_data_load_dashboard() {
         let res = r2?.data;
         setTotalDataCount(r2?.totalLeaveTypes);
 
+<<<<<<< HEAD
         // console.log("brrooro :--- ",res);
+=======
+        console.log("brrooro :--- ",res);
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 
         if (res && res.length > 0) {
             rows = res.map((leave, index) => {

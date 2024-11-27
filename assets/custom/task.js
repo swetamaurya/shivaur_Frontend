@@ -11,9 +11,13 @@ import {individual_delete, objects_data_handler_function} from './globalFunction
 window.individual_delete = individual_delete;
 import { global_search_API } from './apis.js'; // Define your global search API URL
 import {rtnPaginationParameters, setTotalDataCount} from './globalFunctionPagination.js';
+<<<<<<< HEAD
 // -------------------------------------------------------------------------
 import {main_hidder_function} from './gloabl_hide.js';
 // -------------------------------------------------------------------------
+=======
+
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 import {} from "./globalFunctionsExport.js";
 // =================================================================================
 const token = localStorage.getItem('token');
@@ -67,13 +71,21 @@ async function handleSearch() {
                                     <i class="material-icons">more_vert</i>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
+<<<<<<< HEAD
                                     <a class="dropdown-item hr_restriction employee_restriction" href="edit-tasks.html?id=${task?._id}">
+=======
+                                    <a class="dropdown-item" href="edit-tasks.html?id=${task?._id}">
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
                                         <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                     </a>
                                     <a class="dropdown-item" href="task-view.html?id=${task?._id}">
                                         <i class="fa-solid fa-eye m-r-5"></i> View
                                     </a>
+<<<<<<< HEAD
                                     <a class="dropdown-item hr_restriction employee_restriction" onclick="individual_delete('${task?._id}')" href="#" data-bs-toggle="modal" data-bs-target="#delete_data">
+=======
+                                    <a class="dropdown-item" onclick="individual_delete('${task?._id}')" href="#" data-bs-toggle="modal" data-bs-target="#delete_data">
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
                                         <i class="fa-regular fa-trash-can m-r-5"></i> Delete
                                     </a>
                                 </div>
@@ -92,12 +104,17 @@ async function handleSearch() {
         // Update the table and reinitialize checkbox function
         tableData.innerHTML = x;
         checkbox_function(); // Reinitialize checkboxes
+<<<<<<< HEAD
         document.dispatchEvent(new Event('removeDataFromTask'));
         remove_loading_shimmer(); // Remove loader
     }
     try{
         main_hidder_function();
     } catch (error){console.log(error)}
+=======
+        remove_loading_shimmer(); // Remove loader
+    }
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 }
 
 // Attach the search function to the search button

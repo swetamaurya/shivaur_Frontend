@@ -12,8 +12,12 @@ window.individual_delete = individual_delete;
 // -------------------------------------------------------------------------
 import {} from "./globalFunctionsExport.js";
 import {rtnPaginationParameters, setTotalDataCount} from './globalFunctionPagination.js';
+<<<<<<< HEAD
 // -------------------------------------------------------------------------
 import {main_hidder_function} from './gloabl_hide.js';
+=======
+
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 // =================================================================================
 const token = localStorage.getItem('token');
 // =================================================================================
@@ -56,11 +60,16 @@ async function handleSearch() {
             <tr data-id=${e?._id}>
               <td class="width-thirty"><input type="checkbox" class="checkbox_child" value="${e?._id || '-'}"></td>
               <td>${e?.expenseName || '-'}</td>
+<<<<<<< HEAD
  <td>${e?.purchaseBy?.name ? `${e.purchaseBy.name} (${e.purchaseBy.userId || '-'})` : '-'}</td>                          <td>${formatDate(e?.purchaseDate)}</td>
+=======
+              <td>${rtnCltName(e?.purchaseBy) || '-'}</td>
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
               <td>${formatDate(e?.purchaseDate) || '-'}</td>
               <td>₹ ${e?.amount || 0}</td>
               <td>${e?.paidBy || '-'}</td>
               <td class="text-center">${e?.status || '-'}</td>
+<<<<<<< HEAD
              <td class="text-end">
                               <div class="dropdown dropdown-action">
                                   <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
@@ -72,6 +81,26 @@ async function handleSearch() {
                                   </div>
                               </div>
                           </td>
+=======
+              <td class="text-end">
+                <div class="dropdown dropdown-action">
+                  <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="material-icons">more_vert</i>
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <a onclick="handleClickToGenerateViewExpense('${e?._id}')" class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#view_data">
+                      <i class="fa-solid fa-eye m-r-5"></i> View
+                    </a>
+                    <a onclick="handleClickToGenerateEditExpense('${e?._id}')" class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_data">
+                      <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                    </a>
+                    <a class="dropdown-item" onclick="individual_delete('${e?._id}')" data-bs-toggle="modal" data-bs-target="#delete_data">
+                      <i class="fa-regular fa-trash-can m-r-5"></i> Delete
+                    </a>
+                  </div>
+                </div>
+              </td>
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
             </tr>
           `;
         });
@@ -101,9 +130,12 @@ async function handleSearch() {
       checkbox_function(); // Reinitialize checkboxes
       remove_loading_shimmer();
     }
+<<<<<<< HEAD
     try{
         main_hidder_function();
     } catch (error){console.log(error)}
+=======
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
   }
   
 
@@ -116,7 +148,11 @@ document.getElementById("searchButton").addEventListener("click", (e) => {
 
 
 
+<<<<<<< HEAD
 // let cachedClient = [];
+=======
+let cachedClient = [];
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 try {
   const response = await fetch(`${user_API}/data/get`, {
       method: "GET",
@@ -126,7 +162,11 @@ try {
       },
   });
   const resp = await response.json();
+<<<<<<< HEAD
 // //   console.log("askldfja;ls as;ldfjkasd; fasd;lf;kasd j :- ",resp)
+=======
+  console.log("askldfja;ls as;ldfjkasd; fasd;lf;kasd j :- ",resp)
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 
 //   cachedClient = resp?.users.employees;
   
@@ -159,9 +199,21 @@ try {
 catch(error){
   console.log(error)
 }
+<<<<<<< HEAD
 // // ------------------------------------------------------------------------------------------
 //  
 // ===============ac===========================================================================
+=======
+// ------------------------------------------------------------------------------------------
+function rtnCltName(_id_pro) {
+
+    const rtnClt = cachedClient.find(d=> d?._id==_id_pro);
+    console.log("lajksdfl asdflkasd f asfklj :----------------- ",rtnClt);
+    const rtnCltDetails = `${rtnClt?.name} (${rtnClt?.userId})`;
+    return rtnCltDetails;
+}
+// ===========================================================================================
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 // ===========================================================================================
 async function all_data_load_dashboard () {
 
@@ -181,14 +233,22 @@ async function all_data_load_dashboard () {
       const r2 = await response.json();
       let res  = r2?.data;
 
+<<<<<<< HEAD
     //   console.log("alsdfjasf ;pasdf :- ",res);
+=======
+      console.log("alsdfjasf ;pasdf :- ",res);
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
       setTotalDataCount(r2?.totalExpenses);
 
       var x = '';
       if(res.length>0){
           for (var i = 0; i < res.length; i++) {
               var e = res[i];
+<<<<<<< HEAD
             //   console.log("lrlkasj as;broroororor:---===-=-= ",e)
+=======
+              console.log("lrlkasj as;broroororor:---===-=-= ",e)
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
               x += `<tr data-id=${e?._id}>
                           <td class="width-thirty"><input type="checkbox" class="checkbox_child" value="${e?._id || '-'}"></td>
                           <td>${e?.expenseName}</td>
@@ -200,10 +260,16 @@ async function all_data_load_dashboard () {
                               <div class="dropdown dropdown-action">
                                   <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                   <div class="dropdown-menu dropdown-menu-right">
+<<<<<<< HEAD
                                                                             <a onclick="handleClickToGenerateViewExpense('${e?._id}')" class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#view_data"><i class="fa-solid fa-eye m-r-5"></i>View</a>
 
                                   <a onclick="handleClickToGenerateEditExpense('${e?._id}')" class="dropdown-item  hr_restriction " href="#" data-bs-toggle="modal" data-bs-target="#edit_data"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
                                       <a class="dropdown-item  hr_restriction " onclick="individual_delete('${e?._id}')" data-bs-toggle="modal" data-bs-target="#delete_data"><i class="fa-regular fa-trash-can m-r-5"></i> Delete </a>
+=======
+                                      <a onclick="handleClickToGenerateEditExpense('${e?._id}')" class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_data"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
+                                      <a onclick="handleClickToGenerateViewExpense('${e?._id}')" class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#view_data"><i class="fa-solid fa-eye m-r-5"></i>View</a>
+                                      <a class="dropdown-item" onclick="individual_delete('${e?._id}')" data-bs-toggle="modal" data-bs-target="#delete_data"><i class="fa-regular fa-trash-can m-r-5"></i> Delete </a>
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
                                   </div>
                               </div>
                           </td>
@@ -409,8 +475,51 @@ window.handleClickToGenerateViewExpense = async function handleClickToGenerateVi
 window.handleClickToGenerateEditExpense = async function handleClickToGenerateEditExpense(id) {
     try {
         loading_shimmer();
+<<<<<<< HEAD
     } catch (error) {
         console.error(error);
+=======
+    } catch(error){console.log(error)}
+    
+    // -----------------------------------------------------------------------------------
+    const responseData = await fetch(`${expense_API}/get/${id}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    let resp = await responseData.json();
+
+    document.getElementById("_id_hidden").value = resp?._id;
+    document.getElementById("edit-item-name").value = resp?.item;
+    document.getElementById("edit-expense-name").value = resp?.expenseName;
+    document.getElementById("edit-purchase-date").value = resp?.purchaseDate;
+    document.getElementById("edit-purchaseBy_select_option").value = resp?.purchaseBy;
+    document.getElementById("edit-amount").value = resp?.amount;
+    document.getElementById("edit-paid-by").value = resp?.paidBy;
+    document.getElementById("edit-status").value = resp?.status;
+    document.getElementById("edit-description").value = resp?.description || '';
+
+    let f1 = resp?.files;
+    
+    if(f1.length>0){
+        document.getElementById("uploadFilesDiv").classList.remove("d-none");
+
+        let tbody1 = document.getElementById("uplaodFilesTable");
+
+        f1.map((e,i)=>{
+            let z1 = document.createElement("tr");
+            z1.innerHTML = `
+                        <td>${i+1}</td>
+                        <td><input type="text" class="form-control" name="" value="File ${i+1}" disabled id=""></td>
+                        <td class="text-center"><a href="${e} target="_blank" class="btn btn-primary"><i class="fa-regular fa-eye"></i></a></td>
+                        `;
+            tbody1.appendChild(z1);
+        })
+    } else{
+        document.getElementById("uploadFilesDiv").classList.add("d-none");
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
     }
 
     try {

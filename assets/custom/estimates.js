@@ -5,9 +5,15 @@ if (!localStorage.getItem("token")) {
 import { checkbox_function } from './multi_checkbox.js';
 import { loading_shimmer, remove_loading_shimmer } from './globalFunctions1.js';
 import { formatDate } from './globalFunctions2.js'
+<<<<<<< HEAD
 // -------------------------------------------------------------------------
 import {main_hidder_function} from './gloabl_hide.js';
 import { estimate_API, user_API, global_search_API } from './apis.js';
+=======
+import { estimate_API, user_API } from './apis.js';
+import { global_search_API } from './apis.js'; // Define your global search API URL
+
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 // -------------------------------------------------------------------------
 import {individual_delete, objects_data_handler_function} from './globalFunctionsDelete.js';
 window.individual_delete = individual_delete;
@@ -19,7 +25,11 @@ import {rtnPaginationParameters, setTotalDataCount} from './globalFunctionPagina
 const token = localStorage.getItem('token');
 // =========================================================================================
 async function handleSearch() {
+<<<<<<< HEAD
   const searchFields = ["estimatesId", "cltname"]; // IDs of input fields
+=======
+  const searchFields = ["estimatesId", "name"]; // IDs of input fields
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
   const searchType = "Estimate"; // Type to pass to the backend
   const tableData = document.getElementById("tableData");
 
@@ -55,7 +65,11 @@ async function handleSearch() {
             <th class="width-thirty"><input type="checkbox" class="checkbox_child" value="${e._id || '-'}"></th>
             <td>${index + 1}</td>
             <td>${e.estimatesId}</td>
+<<<<<<< HEAD
             <td>${e?.client?.name || "-"} ${e?.client?.userId || ''}</td>
+=======
+            <td>${rtnCltNm(e.client)}</td>
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
             <td>${formatDate(e.estimateDate)}</td>
             <td>${formatDate(e.expiryDate)}</td>
             <td>₹ ${Number(e.GrandTotal).toFixed(2)}</td>
@@ -64,11 +78,19 @@ async function handleSearch() {
                 <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
                   aria-expanded="false"><i class="material-icons">more_vert</i></a>
                 <div class="dropdown-menu dropdown-menu-right">
+<<<<<<< HEAD
                   <a class="dropdown-item hr_restriction " href="edit-estimate.html?id=${e._id}"><i class="fa-solid fa-pencil m-r-5"></i>
                     Edit</a>
                   <a class="dropdown-item" href="estimate-view.html?id=${e._id}"><i class="fa-solid fa-eye m-r-5"></i>
                     View</a>
                   <a class="dropdown-item hr_restriction " onclick="individual_delete('${e._id}')" data-bs-toggle="modal" data-bs-target="#delete_data">
+=======
+                  <a class="dropdown-item" href="edit-estimate.html?id=${e._id}"><i class="fa-solid fa-pencil m-r-5"></i>
+                    Edit</a>
+                  <a class="dropdown-item" href="estimate-view.html?id=${e._id}"><i class="fa-solid fa-eye m-r-5"></i>
+                    View</a>
+                  <a class="dropdown-item" onclick="individual_delete('${e._id}')" data-bs-toggle="modal" data-bs-target="#delete_data">
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
                     <i class="fa-regular fa-trash-can m-r-5"></i> Delete
                   </a>
                 </div>
@@ -90,9 +112,12 @@ async function handleSearch() {
     checkbox_function(); // Reinitialize checkboxes
     remove_loading_shimmer();
   }
+<<<<<<< HEAD
   try{
       main_hidder_function();
   } catch (error){console.log(error)}
+=======
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 }
 
 // =======================================================================================

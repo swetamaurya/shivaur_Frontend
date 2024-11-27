@@ -6,17 +6,28 @@ if (!localStorage.getItem("token")) {
 import { checkbox_function } from './multi_checkbox.js';
 import { status_popup, loading_shimmer, remove_loading_shimmer } from './globalFunctions1.js';
 import { formatDate, capitalizeFirstLetter } from './globalFunctions2.js'
+<<<<<<< HEAD
 import { user_API, departments_API, desginations_API, global_search_API } from './apis.js';
+=======
+import { user_API, departments_API, desginations_API } from './apis.js';
+import { global_search_API } from './apis.js'; // Define your global search API URL
+
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 // -------------------------------------------------------------------------
 import {individual_delete, objects_data_handler_function} from './globalFunctionsDelete.js';
 window.individual_delete = individual_delete;
 // -------------------------------------------------------------------------
 import {} from "./globalFunctionsExport.js";
 import {rtnPaginationParameters, setTotalDataCount} from './globalFunctionPagination.js';
+<<<<<<< HEAD
+=======
+
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 // =================================================================================
 const token = localStorage.getItem('token');
 // =================================================================================
 // Function to handle search and update the same table
+<<<<<<< HEAD
 
 // Get cached designation name by ID
 function getCachedDesignation(designationObj) {
@@ -24,6 +35,8 @@ function getCachedDesignation(designationObj) {
     const designation = cachedDesignations.find(d => d._id === designationObj._id);
     return designation ? designation.designations : '';
 }
+=======
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 async function handleSearch() {
     const searchFields = ["userId", "name"]; // IDs of input fields
     const searchType = "user"; // Type to pass to the backend
@@ -56,7 +69,11 @@ async function handleSearch() {
         if (response.ok && res.data?.length > 0) {
             // Generate table rows dynamically
             const rows = res.data.map((user) => {
+<<<<<<< HEAD
                 const designation = getCachedDesignation(user?.designations ? user.designations.designations : '-');
+=======
+                const designation = getCachedDesignation(user?.designations);
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
                 return `
                 <tr data-id="${user?._id || '-'}">
                     <td><input type="checkbox" class="checkbox_child" value="${user?._id || '-'}"></td>

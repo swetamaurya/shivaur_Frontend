@@ -56,12 +56,21 @@ async function handleSearch() {
               return `
                   <tr data-id="${employee?._id || '-'}">
                     <td><input type="checkbox" class="checkbox_child" value="${employee?._id || '-'}"></td>
+<<<<<<< HEAD
                     <td>${employee?.name || '-'} (${employee?.userId || '-'})</td>
                     <td>${employee?.bankDetails?.bankName || '-'}</td>
                     <td>${employee?.bankDetails?.accountNumber || '-'}</td>
                     <td>${employee?.bankDetails?.IFSCCode || '-'}</td>
                     <td>${employee?.bankDetails?.accountType || '-'}</td>
                     <td>${employee?.bankDetails?.PANNumber || '-'}</td>
+=======
+                    <td>${employee?.name} (${employee?.userId})</td>
+                    <td>${employee?.bankDetails?.bankName}</td>
+                    <td>${employee?.bankDetails?.accountNumber}</td>
+                    <td>${employee?.bankDetails?.IFSCCode}</td>
+                    <td>${employee?.bankDetails?.accountType}</td>
+                    <td>${employee?.bankDetails?.PANNumber}</td>
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
                     <td class="text-end">
                       <div class="dropdown dropdown-action">
                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">

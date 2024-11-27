@@ -56,7 +56,11 @@ async function handleSearch() {
                     <td>${capitalizeFirstLetter(holiday.holidayName)}</td>
                     <td>${formatDate(holiday.holidayDate)}</td>
                     <td>${capitalizeFirstLetter(holiday.offDays)}</td>
+<<<<<<< HEAD
                     <td class=" manager_restriction employee_restriction">
+=======
+                    <td>
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
                         <div class="dropdown dropdown-action">
                             <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
                             <div class="dropdown-menu dropdown-menu-right">
@@ -96,9 +100,12 @@ async function handleSearch() {
     } finally {
         remove_loading_shimmer(); // Remove loading shimmer
     }
+<<<<<<< HEAD
     try{
         main_hidder_function();
     } catch (error){console.log(error)}
+=======
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 }
 
 

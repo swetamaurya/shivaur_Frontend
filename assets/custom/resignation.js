@@ -5,16 +5,27 @@ if (!localStorage.getItem("token")) {
 
 import { checkbox_function } from './multi_checkbox.js';
 import { status_popup, loading_shimmer, remove_loading_shimmer } from './globalFunctions1.js';
+<<<<<<< HEAD
 import { global_search_API, resignation_API, departments_API, user_API } from './apis.js';
+=======
+import { global_search_API, resignation_API, user_API, departments_API } from './apis.js';
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 import { individual_delete, objects_data_handler_function } from './globalFunctionsDelete.js';
 import {rtnPaginationParameters, setTotalDataCount} from './globalFunctionPagination.js';
 
+// -------------------------------------------------------------------------
+import {} from "./globalFunctionsExport.js";
+// =================================================================================
 window.individual_delete = individual_delete;
 const token = localStorage.getItem('token');
+// =================================================================================
 
+<<<<<<< HEAD
 // -------------------------------------------------------------------------
 import {} from "./globalFunctionsExport.js";
 // -------------------------------------------------------------------------
+=======
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 async function handleSearch() {
     const searchFields = ["employee.name"]; // Adjust as needed
     const searchType = "resignation"; // Type to pass to the backend
@@ -52,33 +63,51 @@ async function handleSearch() {
         const res = await response.json();
         console.log("Search Results:", res); // Debug log
 
+<<<<<<< HEAD
         if (res.data?.length > 0) {
             res.data.forEach((e) => {
                 const employeeName = e.employee ? e.employee.name : '-';
                 const email = e.employee ? e.employee.email : '-';
                 const reason = e.reason || '-';
+=======
+        if (res?.data.length > 0) {
+            res.data.forEach((e) => {
+                const employeeName = e.employee ? e.employee.name : '-';
+                const email = e.email || '-';
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
                 const resignationDate = e.resignationDate
                     ? new Date(e.resignationDate).toLocaleDateString()
                     : '-';
                 const noticeDate = e.noticeDate
                     ? new Date(e.noticeDate).toLocaleDateString()
                     : '-';
+<<<<<<< HEAD
                     const status = e.status || '-';
+=======
+                const reason = e.reason || '-';
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 
                 rows += `
                     <tr data-id="${e._id}">
                         <td><input type="checkbox" class="checkbox_child" value="${e._id || '-'}"></td>
                         <td>${employeeName}</td>
                         <td>${email}</td>
+<<<<<<< HEAD
                          <td>${reason}</td>
                         <td>${noticeDate}</td>
                           <td>${resignationDate}</td>
                            <td>${status}</td>
 
+=======
+                        <td>${resignationDate}</td>
+                        <td>${noticeDate}</td>
+                        <td>${reason}</td>
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
                         <td class="text-end">
                             <div class="dropdown dropdown-action">
                                 <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                 <div class="dropdown-menu dropdown-menu-right">
+<<<<<<< HEAD
                                 <a class="dropdown-item" onclick="handleClickOnEditApproveResignation('${e._id}')" data-bs-toggle="modal" data-bs-target="#approve_resignation">
                                       <i class="fa-regular fa-thumbs-up"></i> Approve
                                   </a>    
@@ -86,6 +115,11 @@ async function handleSearch() {
                                         <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                     </a>
                                       
+=======
+                                    <a class="dropdown-item" onclick="handleClickOnEditResignation('${e._id}')" data-bs-toggle="modal" data-bs-target="#edit_resignation">
+                                        <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                                    </a>
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
                                     <a class="dropdown-item" onclick="individual_delete('${e._id}')" data-bs-toggle="modal" data-bs-target="#delete_resignation">
                                         <i class="fa-regular fa-trash-can m-r-5"></i> Delete
                                     </a>
@@ -138,7 +172,27 @@ async function fetchEmployeeAndDepartments() {
             cachedEmployee = data.users.employees || [];
             
         } catch (error) {
+<<<<<<< HEAD
             // console.error('Error fetching Employee:', error);
+=======
+            console.error('Error fetching Employee:', error);
+        }
+    }
+
+    if (cachedDepartments.length === 0) {
+        try {
+            const response = await fetch(`${departments_API}/get`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+            let data = await response.json();
+            cachedDepartments = data?.data;
+        } catch (error) {
+            console.error('Error fetching departments:', error);
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
         }
     }
  
@@ -146,6 +200,7 @@ async function fetchEmployeeAndDepartments() {
 
 window.populateEmployeeDropdown = function populateEmployeeDropdown() {
     const editEmpSelectOption = document.getElementById("edit_employee");
+<<<<<<< HEAD
     editEmpSelectOption.innerHTML = `<option value="" disabled selected>Select Employee</option>`;
 
     cachedEmployee.forEach(employee => {
@@ -157,17 +212,61 @@ window.populateEmployeeDropdown = function populateEmployeeDropdown() {
     });
 };
 
+=======
+    let addEmployee = document.querySelector('#add_resignation').attributes[3]
+
+    console.log("this is innerHTML :_ ", addEmployee);
+
+    // addEmpSelectOption.innerHTML = `<option value="" disabled selected>Select Employee</option>`;
+    // editEmpSelectOption.innerHTML = `<option value="" disabled selected>Select Employee</option>`;
+    console.log('This is my response employee--->>>',cachedEmployee)
+
+    if(!addEmployee){
+        cachedEmployee.forEach(employee => {
+            const option = document.createElement("option");
+            option.value = employee._id ? employee._id: '';
+            option.textContent = employee.name ? employee.name : '';
+            // addEmpSelectOption.appendChild(option);
+            editEmpSelectOption.appendChild(option);        
+        });
+    }else{
+        cachedEmployee.forEach(employee => {
+            const option = document.createElement("option");
+            option.value = employee._id ? employee._id: '';
+            option.textContent = employee.name ? employee.name : '';
+            addEmpSelectOption.appendChild(option);
+        
+        });
+    }
+}
+
+window.populateDepartmentDropdown = function populateDepartmentDropdown() {
+    // const addDeptSelectOption = document.getElementById("departments");
+    const editDeptSelectOption = document.getElementById("edit_departments");
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 
  
 
 // Load all resignation data and display it in the table
 async function all_data_load_dashboard() {
     try {
-        loading_shimmer();
-        await fetchEmployeeAndDepartments();
+        try{
+            loading_shimmer();
+            await fetchEmployeeAndDepartments();
 
+<<<<<<< HEAD
         populateEmployeeDropdown();
         // populateDepartmentDropdown();
+=======
+            populateEmployeeDropdown();
+            populateDepartmentDropdown();
+        } catch (error){
+            console.log(error)
+        }
+
+        const table = document.getElementById('resignation-table-body');
+        table.innerHTML = '';
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
         let rows = [];
 
         const response = await fetch(`${resignation_API}/getAll${rtnPaginationParameters()}`, {
@@ -180,11 +279,17 @@ async function all_data_load_dashboard() {
         
 
         let r2 = await response.json();
+<<<<<<< HEAD
         // console.log("this is a game for the dveelper brother. ;;;- ",r2);
         setTotalDataCount(20);
 
         const table = document.getElementById('resignation-table-body');
         table.innerHTML = '';
+=======
+        console.log("lkasjd slkasdjf :---- ",r2);
+        setTotalDataCount(r2?.totalResignations);
+
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
         res = r2?.data;
         res.forEach(e => {
             const employeeName = e.employee ? e.employee.name : '-';
@@ -233,7 +338,10 @@ async function all_data_load_dashboard() {
         remove_loading_shimmer();
     }
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
 // Format date for Edit form
 function formatDate(dateString) {
     return new Date(dateString).toISOString().split('T')[0];
@@ -325,6 +433,7 @@ statusButtons.forEach((button) => {
 
     const status = event.target.getAttribute("data-status"); // Get Approved/Declined from clicked button
 
+<<<<<<< HEAD
     if (
       !status ||
       (status !== "Approved" && status !== "Declined")
@@ -373,3 +482,48 @@ statusButtons.forEach((button) => {
 });
 
  
+=======
+//         loadResignation();
+//     } catch (error) {
+//         console.error('Error adding Resignation:', error);
+//         status_popup("Please try <br> again later", false);
+//     } finally {
+//         remove_loading_shimmer();
+//     }
+// });
+//     event.preventDefault();
+//     const submitButton = event.target.querySelector("button[type='submit']");
+//     submitButton.disabled = true;
+
+//     try {
+//         document.querySelectorAll(".btn-close").forEach(e => e.click());
+//         loading_shimmer();
+
+//         const employee = document.getElementById('add_employee').value;
+//         const department = document.getElementById('departments').value;
+//         const noticeDate = document.getElementById('add_noticeDate').value;
+//         const resignationDate = document.getElementById('add_resignationDate').value;
+//         const reason = document.getElementById('add_reason').value;
+
+//         const response = await fetch(`${resignation_API}/post`, {
+//             method: 'POST',
+//             headers: {
+//                 "Authorization": `Bearer ${token}`,
+//                 "Content-Type": "application/json",
+//             },
+//             body: JSON.stringify({ employee, department, noticeDate, resignationDate, reason })
+//         });
+
+//         const success = response.ok;
+//         if (success) 
+//             status_popup(success ? "Resignation added <br> Successfully" : "Please try again later", success);
+
+//         loadResignation();
+//     } catch (error) {
+//         console.error('Error adding Resignation:', error);
+//         status_popup("Please try <br> again later", false);
+//     } finally {
+//         remove_loading_shimmer();
+//     }
+// });
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a

@@ -28,6 +28,7 @@ loginForm.addEventListener("submit", async (event) => {
             localStorage.setItem("User_role", roles);
             localStorage.setItem("User_name",name);
 
+<<<<<<< HEAD
             // Redirect based on roles
             if (roles.toLowerCase() === "Admin".toLowerCase()) {
                 window.location.href = 'admin-dashboard.html';
@@ -41,14 +42,29 @@ loginForm.addEventListener("submit", async (event) => {
                 document.getElementById("response").innerHTML = `<i class="fa fa-times" aria-hidden="true"></i> Role not recognized.`;  
                 localStorage.clear();
             }
+=======
+         // Redirect based on roles
+         if (roles === "Admin") {
+            window.location.href = 'admin-dashboard.html';
+        } else if (roles === "Employee") {
+            window.location.href = 'employee-dashboard.html';
+        } else if (roles == "HR") {
+            window.location.href = 'hr-dashboard.html';
+        } else if (roles == "Manager") {
+            // localStorage.clear();
+            window.location.href = 'manager-dashboard.html';
+>>>>>>> d26da3fff18da4e43729e763ccb5d089cb5bb30a
         } else {
-            document.getElementById("response").innerHTML = `<i class="fa fa-times" aria-hidden="true"></i> ${result?.message || "Login failed."}.`;
-            localStorage.clear();
+            document.getElementById("response").innerHTML = `<i class="fa fa-times" aria-hidden="true"></i> Role not recognized.`;
         }
-    } catch (error) {
-        document.getElementById("response").innerHTML = `<i class="fa fa-times" aria-hidden="true"></i> Server Down, please try again later..`;
+    } else {
+        document.getElementById("response").innerHTML = `<i class="fa fa-times" aria-hidden="true"></i> ${result?.message || "Login failed."}.`;
         localStorage.clear();
     }
+} catch (error) {
+    document.getElementById("response").innerHTML = `<i class="fa fa-times" aria-hidden="true"></i> Server Down, please try again later..`;
+    localStorage.clear();
+}
 });
 
 
